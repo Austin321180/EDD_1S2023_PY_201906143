@@ -10,7 +10,7 @@ type Datos struct {
 type NodoPila struct {
 	Hora      string
 	Fecha     string
-	siguiente *NodoPila
+	siguient *NodoPila
 }
 
 type Pila struct {
@@ -18,17 +18,41 @@ type Pila struct {
 	tamaño int
 }
 
+func (p *Pila) vacia() bool {
+	if p.tamaño == 0 {
+		return true
+	} else {
+		return false
+	}
+}
+
 func (p *Pila) Push(hora string, fecha string) {
-	p.Arriba = &NodoPila{hora, fecha, p.Arriba}
-	p.tamaño++
+	if p.vacia() {
+		nuevoN := &NodoPila{hora, fecha, p.Arriba}
+		p.Arriba = nuevoN
+		p.tamaño++
+	} else {
+		nuevoN := &NodoPila{hora, fecha, p.Arriba}
+		p.Arriba = nuevoN
+		p.tamaño++
+	}
+
 }
 
 func (p *Pila) Pop() {
-	p.Arriba = p.Arriba.siguiente
-	p.tamaño--
+	if p.vacia() {
+		fmt.Println("La pila está vacia")
+	} else {
+		p.Arriba = p.Arriba.siguient
+		p.tamaño--
+	}
 }
 
 func (p *Pila) MostrarPila() {
-	fmt.Println(p.Arriba.Fecha)
-	fmt.Println(p.Arriba.Hora)
+	if p.vacia() {
+		fmt.Println("La pila está vacia")
+	} else {
+		fmt.Println(p.Arriba.Fecha)
+		fmt.Println(p.Arriba.Hora)
+	}
 }

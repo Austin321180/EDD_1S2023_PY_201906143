@@ -14,23 +14,47 @@ type Cola struct {
 	tamaño  int
 }
 
-func (c *Cola) Encolar(nomb string, carn int, contr string) {
-	nuevo := &NodoCola{nomb, carn, contr, nil}
-	aux := c.Primero
-	for aux.siguiente != nil {
-		aux = aux.siguiente
+func (c *Cola) vacia() bool {
+	if c.tamaño == 0 {
+		return true
+	} else {
+		return false
 	}
-	aux.siguiente = nuevo
-	c.tamaño++
+}
+
+func (c *Cola) Encolar(nomb string, carn int, contr string) {
+	if c.vacia() {
+		nuevoNodo := &NodoCola{nomb, carn, contr, nil}
+		c.Primero = nuevoNodo
+		c.tamaño++
+	} else {
+		nuevoNodo := &NodoCola{nomb, carn, contr, nil}
+		aux := c.Primero
+		for aux.siguiente != nil {
+			aux = aux.siguiente
+		}
+		aux.siguiente = nuevoNodo
+		c.tamaño++
+	}
 }
 
 func (c *Cola) Desencolar() {
-	c.Primero = c.Primero.siguiente
-	c.tamaño--
+	if c.vacia() {
+		fmt.Println("No hay datos en la cola")
+	} else {
+		c.Primero = c.Primero.siguiente
+		c.tamaño--
+
+	}
 }
 
 func (c *Cola) MostrarCola() {
-	fmt.Println(c.Primero.Nombre)
-	fmt.Println(c.Primero.Carnet)
-	fmt.Println(c.Primero.Contraseña)
+	if c.vacia() {
+		fmt.Println("No hay datos enla cola")
+	} else {
+		fmt.Println("En la cola: ", c.tamaño)
+		fmt.Println("Estudiante actual en la cola: ", c.Primero.Nombre)
+	
+	}
+	
 }

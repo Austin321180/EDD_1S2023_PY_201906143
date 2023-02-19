@@ -1,5 +1,7 @@
 package edd
 
+import "fmt"
+
 type AlumnosAceptados struct {
 	carnet     int
 	nombre     string
@@ -31,18 +33,24 @@ func (l *Lista_Doble) nuevoN(alumno *AlumnosAceptados) *Nodo_Doble {
 	return &Nodo_Doble{alumno, nil, nil}
 }
 
-func (l *Lista_Doble) Insertar_Final(carnet int, nombre string, contraseña string) {
+func (l *Lista_Doble) Agregar(carnet int, nombre string, contraseña string) {
 	nuevo := &AlumnosAceptados{carnet, nombre, contraseña}
 	if l.vacia() {
-		l.inicio = l.nuevoN(nuevo)
+		nueN := l.nuevoN(nuevo)
+		l.inicio = nueN
+		l.final = nueN
 		l.tamaño++
 	} else {
-		temp := l.inicio
-		for temp.siguiente != nil {
-			temp = temp.siguiente
+		nueN := l.nuevoN(nuevo)
+		if l.final.anterior == nil {
+			nueN.anterior = l.inicio
+			l.inicio.siguiente = nueN
+			l.final = nueN
+		} else {
+			l.final.siguiente = nueN
+			nueN.anterior = l.final
+			l.final = nueN
 		}
-		temp.siguiente = l.nuevoN(nuevo)
-		temp.siguiente.anterior = temp
 		l.tamaño++
 	}
 }
@@ -50,6 +58,7 @@ func (l *Lista_Doble) Insertar_Final(carnet int, nombre string, contraseña stri
 func (l *Lista_Doble) MostrarDatos() {
 	temp := l.inicio
 	for temp != nil {
-
+		fmt.Println(l.inicio.alumno.carnet, l.inicio.alumno.nombre, l.inicio.alumno.carnet, l.tamaño)
+		temp = temp.siguiente
 	}
 }
