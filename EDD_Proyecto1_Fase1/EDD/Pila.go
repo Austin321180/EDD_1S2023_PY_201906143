@@ -1,6 +1,8 @@
 package edd
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type Datos struct {
 	hora  string
@@ -8,8 +10,8 @@ type Datos struct {
 }
 
 type NodoPila struct {
-	Hora      string
-	Fecha     string
+	Hora     string
+	Fecha    string
 	siguient *NodoPila
 }
 
@@ -28,7 +30,7 @@ func (p *Pila) vacia() bool {
 
 func (p *Pila) Push(hora string, fecha string) {
 	if p.vacia() {
-		nuevoN := &NodoPila{hora, fecha, p.Arriba}
+		nuevoN := &NodoPila{hora, fecha, nil}
 		p.Arriba = nuevoN
 		p.tamaño++
 	} else {
@@ -55,4 +57,26 @@ func (p *Pila) MostrarPila() {
 		fmt.Println(p.Arriba.Fecha)
 		fmt.Println(p.Arriba.Hora)
 	}
+}
+
+func (p *Pila) GrafP() {
+	nombre_archivo := "./pila.dot"
+	nombre_imagen := "pila.jpg"
+	texto := "digraph pila{\n"
+	texto += "rankdir=LR;\n"
+	texto += "node[shape = record]"
+	aux := p.Arriba
+	texto += "nodo0 [label=\""
+	for i := 0; i < p.tamaño; i++ {
+		if p.vacia() {
+			texto = texto + ""
+		} else {
+			texto = texto + "|Se acepto estudiante: " + " En la hora: " + aux.Hora + " En la fecha: " + aux.Fecha
+			aux = aux.siguient
+		}
+	}
+	texto += "\"]; \n}"
+	crearArch(nombre_archivo)
+	escribirArch(texto, nombre_archivo)
+	ejecutar(nombre_imagen, nombre_archivo)
 }

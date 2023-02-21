@@ -94,10 +94,13 @@ func administrador() {
 					fmt.Println("")
 					c.MostrarCola()
 					p.Push(hora(), fecha())
-					p.MostrarPila()
+					p.GrafP()
+					c.GrafC()
 				case 2:
+					fmt.Println("Se rechazo estudiante")
 					c.Desencolar()
-					break
+					c.MostrarCola()
+					c.GrafC()
 				case 3:
 					s = true
 				}
@@ -105,7 +108,7 @@ func administrador() {
 		case 2:
 			fmt.Println("**********Estudiantes del Sistema**********")
 			c.Encolar("Austin Alvarez", 201906143, "hola")
-			break
+			c.GrafC()
 		case 3:
 			fmt.Println("-----------Ingreso de Estudiantes al Sistema------------")
 			fmt.Print("Ingrese el carnet: ")
@@ -116,12 +119,13 @@ func administrador() {
 			fmt.Print("Ingrese la contraseña: ")
 			fmt.Scan(&contr)
 			c.Encolar(nomb, car, contr)
-			fmt.Println("Se guardo correctamente ", car)
+			c.GrafC()
 			fmt.Println("--------------------------------------------------------")
 			break
 		case 4:
 			fmt.Println("*********Carga Masiva**********************")
 			abrirarchivo()
+			c.GrafC()
 		case 5:
 			fmt.Println("Sesion Cerrada")
 			sal = true
@@ -148,38 +152,45 @@ func estudiantes() {
 }
 
 func abrirarchivo() {
-	// Abrir la ventana de diálogo para seleccionar un archivo CSV
-	file, _, err := dlgs.File("Seleccione un archivo CSV", "", false)
-	if err != nil {
-		fmt.Println("Error al abrir la ventana de diálogo:", err)
+	c := edd.Cola{}
+
+	file, _, er := dlgs.File("Seleccione un archivo CSV", "", false)
+	if er != nil {
+		fmt.Println("Error al abrir la ventana de diálogo:", er)
 		return
 	}
 
-	// Abrir el archivo CSV
-	f, err := os.Open(file)
-	if err != nil {
-		fmt.Println("Error al abrir el archivo:", err)
+	f, er := os.Open(file)
+	if er != nil {
+		fmt.Println("Error al abrir el archivo:", er)
 		return
 	}
 	defer f.Close()
+	leer := csv.NewReader(f)
 
-	// Crear un lector de CSV
-	reader := csv.NewReader(f)
-
-	// Saltar la primera línea (encabezado)
-	if _, err := reader.Read(); err != nil {
-		fmt.Println("Error al leer la primera línea:", err)
+	_, err := leer.Read()
+	//primera fila
+	if err != nil {
+		fmt.Println(err)
 		return
 	}
 
-	// Leer los datos línea por línea
 	for {
-		record, err := reader.Read()
-		if err != nil {
-			fmt.Println("Error al leer el archivo:", err)
-			break
+		col, er := leer.Read()
+		if er != nil {
+			if er.Error() == "EOF" {
+				break
+			}
+			fmt.Println("error: ", er)
 		}
-		fmt.Println(record)
+		col1, er := strconv.Atoi(col[0])
+		if er != nil {
+			fmt.Println("error, ", er)
+			return
+		}
+		c.Encolar(col[1], col1, col[2])
+		fmt.Println(col[1], col1, col[2])
+
 	}
 }
 
@@ -198,10 +209,19 @@ func hora() string {
 	} else {
 		final = final + strconv.Itoa(tiempo.Minute()) + ":"
 	}
+	//segundos
+	if tiempo.Second() < 10 {
+		final = final + "0" + strconv.Itoa(tiempo.Second()) + ":"
+	} else {
+		final = final + strconv.Itoa(tiempo.Second())
+	}
 	return final
 }
 
 func fecha() string {
 	fech := time.Now()
-	return fech.Format("2023/01/19")
+	final := ""
+	f := fmt.Sprintf("%d/%02d/%02d", fech.Day(), fech.Month(), fech.Year())
+	final += f
+	return final
 }
