@@ -1,0 +1,24 @@
+{
+	"Alumnos": [
+		{
+			"nombre": "Austin Alvarez",
+			"carnet": 201906143,
+			"password": "hola",
+			"Carpeta_Raiz": "/"
+		},
+		{
+			"nombre": "Antonio",
+			"carnet": 34123,
+			"password": "23ewq",
+			"Carpeta_Raiz": "/"
+		}
+	]
+},
+		{
+			"nombre": "Carlos Perez",
+			"carnet": 32412,
+			"password": "rwe12",
+			"Carpeta_Raiz": "/"
+		}
+	]
+}

@@ -12,12 +12,14 @@ type Datos struct {
 type NodoPila struct {
 	Hora     string
 	Fecha    string
+	Estado   bool
 	siguient *NodoPila
 }
 
 type Pila struct {
 	Arriba *NodoPila
 	tamaño int
+	estado bool
 }
 
 func (p *Pila) vacia() bool {
@@ -28,13 +30,13 @@ func (p *Pila) vacia() bool {
 	}
 }
 
-func (p *Pila) Push(hora string, fecha string) {
+func (p *Pila) Push(hora string, fecha string, estado bool) {
 	if p.vacia() {
-		nuevoN := &NodoPila{hora, fecha, nil}
+		nuevoN := &NodoPila{hora, fecha, estado, nil}
 		p.Arriba = nuevoN
 		p.tamaño++
 	} else {
-		nuevoN := &NodoPila{hora, fecha, p.Arriba}
+		nuevoN := &NodoPila{hora, fecha, estado, p.Arriba}
 		p.Arriba = nuevoN
 		p.tamaño++
 	}
@@ -59,7 +61,25 @@ func (p *Pila) MostrarPila() {
 	}
 }
 
-func (p *Pila) GrafP() {
+func (p *Pila) Aceptado() {
+	if p.vacia() {
+		fmt.Println("La pila esta vacia")
+		return
+	}
+	p.Arriba.Estado = true
+	p.estado = true
+}
+
+func (p *Pila) Rechazado() {
+	if p.vacia() {
+		fmt.Println("La pila esta vacia")
+		return
+	}
+	p.Arriba.Estado = false
+	p.estado = true
+}
+
+func (p *Pila) GrafP(estado bool) {
 	nombre_archivo := "./pila.dot"
 	nombre_imagen := "pila.jpg"
 	texto := "digraph pila{\n"
@@ -71,7 +91,11 @@ func (p *Pila) GrafP() {
 		if p.vacia() {
 			texto = texto + ""
 		} else {
-			texto = texto + "|Se acepto estudiante: " + " En la hora: " + aux.Hora + " En la fecha: " + aux.Fecha
+			if aux.Estado {
+				texto = texto + "|Se Acepto estudiante: " + " En la hora: " + aux.Hora + " En la fecha: " + aux.Fecha
+			} else {
+				texto = texto + "|Se Rechazo estudiante: " + " En la hora: " + aux.Hora + " En la fecha: " + aux.Fecha
+			}
 			aux = aux.siguient
 		}
 	}

@@ -71,7 +71,7 @@ func (c *Cola) Buscar(valor int) bool {
 
 func (c *Cola) MostrarCola() {
 	if c.vacia() {
-		fmt.Println("No hay datos enla cola")
+		fmt.Println("No hay datos en la cola")
 	} else {
 		fmt.Println("En la cola: ", c.tamaño)
 		fmt.Println("Estudiante actual en la cola: ", c.Primero.Nombre)

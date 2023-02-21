@@ -1,0 +1,6 @@
+digraph pila{
+rankdir=LR;
+node[shape = record]nodo0 [label="|Se Acepto estudiante:  En la hora: 14:46:00: En la fecha: 21/02/2023|Se Acepto estudiante:  En la hora: 14:45:58 En la fecha: 21/02/2023"]; 
+}pto estudiante:  En la hora: 14:15:27 En la fecha: 21/02/2023"]; 
+}cepto estudiante:  En la hora: 12:47:49 En la fecha: 21/02/2023"]; 
+}

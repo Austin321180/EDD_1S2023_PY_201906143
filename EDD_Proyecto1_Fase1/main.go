@@ -2,6 +2,7 @@ package main
 
 import (
 	"EDD_proyecto1_Fase1/EDD_Proyecto1_Fase1/edd"
+	"bufio"
 	"encoding/csv"
 	"fmt"
 	"os"
@@ -13,8 +14,13 @@ import (
 )
 
 func main() {
+	menu_login()
+}
+
+func menu_login() {
 	salir := false
 	opc := 0
+	ld := &edd.Lista_Doble{}
 	for !salir {
 		fmt.Println("**********GoDrive***********")
 		fmt.Println("*1.Iniciar sesion          *")
@@ -25,7 +31,7 @@ func main() {
 		switch opc {
 		case 1:
 			sal := false
-			usuario := ""
+			var usuario string
 			contraseña := ""
 			for !sal {
 				fmt.Println("Ingresa usuario: ")
@@ -34,17 +40,27 @@ func main() {
 				fmt.Scanln(&contraseña)
 				usu := strings.ToLower(usuario)
 				cont := strings.ToLower(contraseña)
+				carnInt, err := strconv.Atoi(usuario)
+				if err != nil {
+					fmt.Println("canet equivocado")
+				}
+
 				if usu == "admin" && cont == "admin" {
+					fmt.Println("Bienvenido", usu)
 					administrador()
 					break
+				} else if ld.Ingresar(carnInt, contraseña) {
+					estudiantes()
 				} else {
-					fmt.Println("no coinciden los datos")
+					fmt.Println("Datos incorrectos")
 					break
 				}
 			}
 		case 2:
 			salir = true
 			fmt.Println("Salió de GoDrive")
+		case 3:
+			ld.MostrarDatos()
 		}
 	}
 }
@@ -52,13 +68,13 @@ func main() {
 func administrador() {
 	op := 0
 	sal := false
-	c := edd.Cola{}
-	ld := edd.Lista_Doble{}
-	p := edd.Pila{}
+	c := &edd.Cola{}
+	ld := &edd.Lista_Doble{}
+	p := &edd.Pila{}
 	var (
 		car   int
 		contr string
-		nomb  string
+		//nomb  string
 		//apellido string
 	)
 	for !sal {
@@ -88,36 +104,44 @@ func administrador() {
 				case 1:
 					fmt.Println("")
 					fmt.Println("se acepto a: ", c.Primero.Nombre)
-					fmt.Println("")
 					ld.Agregar(c.Primero.Carnet, c.Primero.Nombre, c.Primero.Contraseña)
 					c.Desencolar()
 					fmt.Println("")
 					c.MostrarCola()
-					p.Push(hora(), fecha())
-					p.GrafP()
+					p.Push(hora(), fecha(), true)
+					p.GrafP(true)
 					c.GrafC()
+					ld.GrafLD()
+					ld.Graf_Json()
 				case 2:
 					fmt.Println("Se rechazo estudiante")
 					c.Desencolar()
 					c.MostrarCola()
 					c.GrafC()
+					p.Push(hora(), fecha(), false)
+					p.GrafP(false)
 				case 3:
 					s = true
 				}
 			}
 		case 2:
 			fmt.Println("**********Estudiantes del Sistema**********")
-			c.Encolar("Austin Alvarez", 201906143, "hola")
-			c.GrafC()
+			ld.MostrarDatos()
 		case 3:
+			c.Encolar("Austin Alvarez", 201906143, "hola")
+			leer := bufio.NewReader(os.Stdin)
 			fmt.Println("-----------Ingreso de Estudiantes al Sistema------------")
+			fmt.Scanln()
 			fmt.Print("Ingrese el carnet: ")
-			fmt.Scan(&car)
+			fmt.Scanln(&car)
 			fmt.Print("Ingrese el nombre: ")
-			fmt.Scan(&nomb)
-			//nombrecompleto := fmt.Sprintf("%s %s", &nomb, &apellido)
+			nomb, err := leer.ReadString('\n')
+			if err != nil {
+				fmt.Println(err)
+			}
+			nomb = strings.TrimSpace(nomb)
 			fmt.Print("Ingrese la contraseña: ")
-			fmt.Scan(&contr)
+			fmt.Scanln(&contr)
 			c.Encolar(nomb, car, contr)
 			c.GrafC()
 			fmt.Println("--------------------------------------------------------")
@@ -136,11 +160,10 @@ func administrador() {
 func estudiantes() {
 	op := 0
 	salir := false
+	//ld := &edd.Lista_Doble{}
 	for !salir {
-		fmt.Println("Nombre: ")
-		fmt.Println("fecha:  ")
-		fmt.Println("Hora:  ")
-		fmt.Println("Numero inicio de sesion: ")
+		fmt.Println("inicio sesión")
+		fmt.Println(hora(), fecha())
 		fmt.Println("1 Cerrar sesion")
 		fmt.Scanln(&op)
 		switch op {
@@ -184,11 +207,11 @@ func abrirarchivo() {
 			fmt.Println("error: ", er)
 		}
 		col1, er := strconv.Atoi(col[0])
+		c.Encolar(col[1], col1, col[2])
 		if er != nil {
 			fmt.Println("error, ", er)
 			return
 		}
-		c.Encolar(col[1], col1, col[2])
 		fmt.Println(col[1], col1, col[2])
 
 	}
