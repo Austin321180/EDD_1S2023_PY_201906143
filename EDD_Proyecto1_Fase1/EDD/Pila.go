@@ -84,7 +84,7 @@ func (p *Pila) GrafP(estado bool) {
 	nombre_imagen := "pila.jpg"
 	texto := "digraph pila{\n"
 	texto += "rankdir=LR;\n"
-	texto += "node[shape = record]"
+	texto += "node[shape = record, style = solid, color = green, fillcolor = palegreen, fontname=\"Arial\"];\n"
 	aux := p.Arriba
 	texto += "nodo0 [label=\""
 	for i := 0; i < p.tamaño; i++ {

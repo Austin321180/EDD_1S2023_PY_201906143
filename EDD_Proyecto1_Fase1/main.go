@@ -5,6 +5,7 @@ import (
 	"bufio"
 	"encoding/csv"
 	"fmt"
+	"io"
 	"os"
 	"strconv"
 	"strings"
@@ -14,13 +15,16 @@ import (
 )
 
 func main() {
-	menu_login()
+	c := &edd.Cola{}
+	ld := &edd.Lista_Doble{}
+	p := &edd.Pila{}
+	menu_login(ld, p, c)
 }
 
-func menu_login() {
+func menu_login(ld *edd.Lista_Doble, p *edd.Pila, c *edd.Cola) {
 	salir := false
 	opc := 0
-	ld := &edd.Lista_Doble{}
+
 	for !salir {
 		fmt.Println("**********GoDrive***********")
 		fmt.Println("*1.Iniciar sesion          *")
@@ -47,10 +51,11 @@ func menu_login() {
 
 				if usu == "admin" && cont == "admin" {
 					fmt.Println("Bienvenido", usu)
-					administrador()
+					administrador(ld, p, c)
 					break
 				} else if ld.Ingresar(carnInt, contraseña) {
-					estudiantes()
+					estudiantes(ld)
+					break
 				} else {
 					fmt.Println("Datos incorrectos")
 					break
@@ -65,12 +70,9 @@ func menu_login() {
 	}
 }
 
-func administrador() {
+func administrador(ld *edd.Lista_Doble, p *edd.Pila, c *edd.Cola) {
 	op := 0
 	sal := false
-	c := &edd.Cola{}
-	ld := &edd.Lista_Doble{}
-	p := &edd.Pila{}
 	var (
 		car   int
 		contr string
@@ -102,17 +104,17 @@ func administrador() {
 				fmt.Scan(&opc)
 				switch opc {
 				case 1:
-					fmt.Println("")
+					fmt.Println("******************************************************")
 					fmt.Println("se acepto a: ", c.Primero.Nombre)
 					ld.Agregar(c.Primero.Carnet, c.Primero.Nombre, c.Primero.Contraseña)
 					c.Desencolar()
 					fmt.Println("")
-					c.MostrarCola()
 					p.Push(hora(), fecha(), true)
+					c.MostrarCola()
 					p.GrafP(true)
 					c.GrafC()
-					ld.GrafLD()
-					ld.Graf_Json()
+					//ld.GrafLD()
+					//ld.Graf_Json()
 				case 2:
 					fmt.Println("Se rechazo estudiante")
 					c.Desencolar()
@@ -128,18 +130,17 @@ func administrador() {
 			fmt.Println("**********Estudiantes del Sistema**********")
 			ld.MostrarDatos()
 		case 3:
-			c.Encolar("Austin Alvarez", 201906143, "hola")
-			leer := bufio.NewReader(os.Stdin)
+			leer := bufio.NewReader(os.Stdin) //bufio para leer con espacios
 			fmt.Println("-----------Ingreso de Estudiantes al Sistema------------")
 			fmt.Scanln()
 			fmt.Print("Ingrese el carnet: ")
 			fmt.Scanln(&car)
 			fmt.Print("Ingrese el nombre: ")
-			nomb, err := leer.ReadString('\n')
-			if err != nil {
-				fmt.Println(err)
+			nomb, error := leer.ReadString('\n') //lee lo que escribo y si hay un error lo imprime
+			if error != nil {
+				fmt.Println(error)
 			}
-			nomb = strings.TrimSpace(nomb)
+			nomb = strings.TrimSpace(nomb) //es para eliminar espacios al principio o al final de lo que escribi
 			fmt.Print("Ingrese la contraseña: ")
 			fmt.Scanln(&contr)
 			c.Encolar(nomb, car, contr)
@@ -148,23 +149,25 @@ func administrador() {
 			break
 		case 4:
 			fmt.Println("*********Carga Masiva**********************")
-			abrirarchivo()
+			abrirarchivo(c)
 			c.GrafC()
 		case 5:
 			fmt.Println("Sesion Cerrada")
+			menu_login(ld, p, c)
 			sal = true
 		}
 	}
 }
 
-func estudiantes() {
+func estudiantes(ld *edd.Lista_Doble) {
 	op := 0
 	salir := false
-	//ld := &edd.Lista_Doble{}
 	for !salir {
+		fmt.Print("---------------Estudiante--------------------")
 		fmt.Println("inicio sesión")
-		fmt.Println(hora(), fecha())
+		fmt.Println("Hora:", hora(), "fecha:", fecha())
 		fmt.Println("1 Cerrar sesion")
+		fmt.Println("-------------------------------------------")
 		fmt.Scanln(&op)
 		switch op {
 		case 1:
@@ -174,9 +177,7 @@ func estudiantes() {
 	}
 }
 
-func abrirarchivo() {
-	c := edd.Cola{}
-
+func abrirarchivo(c *edd.Cola) {
 	file, _, er := dlgs.File("Seleccione un archivo CSV", "", false)
 	if er != nil {
 		fmt.Println("Error al abrir la ventana de diálogo:", er)
@@ -192,7 +193,7 @@ func abrirarchivo() {
 	leer := csv.NewReader(f)
 
 	_, err := leer.Read()
-	//primera fila
+	//saltar primera fila
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -201,19 +202,19 @@ func abrirarchivo() {
 	for {
 		col, er := leer.Read()
 		if er != nil {
-			if er.Error() == "EOF" {
+			if er == io.EOF {
 				break
 			}
 			fmt.Println("error: ", er)
+			return
 		}
+
 		col1, er := strconv.Atoi(col[0])
 		c.Encolar(col[1], col1, col[2])
 		if er != nil {
 			fmt.Println("error, ", er)
 			return
 		}
-		fmt.Println(col[1], col1, col[2])
-
 	}
 }
 

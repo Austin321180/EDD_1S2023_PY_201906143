@@ -18,10 +18,10 @@ type Nodo_Doble struct {
 }
 
 type Lista_Doble struct {
-	tamaño int
-	inicio *Nodo_Doble
-	final  *Nodo_Doble
-	pila   *Nodo_Doble
+	tamaño   int
+	inicio   *Nodo_Doble
+	final    *Nodo_Doble
+	bitacora *Nodo_Doble
 }
 
 func (l *Lista_Doble) vacia() bool {
@@ -59,13 +59,15 @@ func (l *Lista_Doble) Agregar(carnet int, nombre string, contraseña string) {
 }
 
 func (l *Lista_Doble) MostrarDatos() {
+	aux := l.inicio
 	if l.vacia() {
 		fmt.Println("Lista doble vacia")
 	} else {
-		temp := l.inicio
-		for temp != nil {
-			fmt.Println(l.inicio.alumno.carnet, l.inicio.alumno.nombre, l.inicio.alumno.contraseña)
-			temp = temp.siguiente
+		for aux != nil {
+			fmt.Println("---------------------------------------------------------------------------------------")
+			fmt.Println("Carnet:", aux.alumno.carnet, " Nombre:", aux.alumno.nombre)
+			fmt.Println("---------------------------------------------------------------------------------------")
+			aux = aux.siguiente
 		}
 	}
 }
@@ -86,8 +88,9 @@ func (l *Lista_Doble) GrafLD() {
 	nombre_imagen := "listadoble.jpg"
 	texto := "digraph listadoble{\n"
 	texto += "rankdir=LR;\n"
-	texto += "node[shape = record];\n"
+	texto += "node[shape = record, style = solid, color = green, fillcolor = palegreen, fontname=\"Arial\"];\n"
 	texto += "nodonull[label=\"null\"];\n"
+	texto += "nodonull2[label=\"null\"];\n"
 	aux := l.inicio
 	contador := 0
 	for i := 0; i < l.tamaño; i++ {
@@ -102,7 +105,10 @@ func (l *Lista_Doble) GrafLD() {
 		texto += "nodo" + strconv.Itoa(c) + "-> nodo" + strconv.Itoa(i) + ";\n"
 		contador = c
 	}
-	texto += "nodo" + strconv.Itoa(contador) + "->nodonull;\n"
+	texto += "nodo" + strconv.Itoa(contador) + "->nodonull2;\n"
+	texto += "nodonull2->nodo" + strconv.Itoa(contador) + ";\n"
+	texto += "nodonull->nodo0;\n"
+	texto += "nodo0->nodonull;"
 	texto += "}"
 	crearArch(nombre_archivo)
 	escribirArch(texto, nombre_archivo)

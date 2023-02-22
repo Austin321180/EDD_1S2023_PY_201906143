@@ -26,10 +26,10 @@ func (c *Cola) vacia() bool {
 }
 
 func (c *Cola) Encolar(nomb string, carn int, contr string) {
-	if c.Buscar(carn) {
+	if c.Buscar(carn) { //cuando voy a agregar mando a llamar a mi funcion buscar y si me retorna true imprime un mensaje y no retorna nada
 		fmt.Println("El carnet:", carn, "ya existe en el sistema.\n")
 		return
-	} else {
+	} else { //si me retorna false entonces ya lo imgresa normal
 
 		if c.vacia() {
 			nuevoNodo := &NodoCola{nomb, carn, contr, nil}
@@ -55,18 +55,17 @@ func (c *Cola) Desencolar() {
 	} else {
 		c.Primero = c.Primero.siguiente
 		c.tamaño--
-
 	}
 }
-func (c *Cola) Buscar(valor int) bool {
-	nodo := c.Primero
-	for nodo != nil {
-		if nodo.Carnet == valor {
-			return true
+func (c *Cola) Buscar(valor int) bool { //buscar un archivo repetido
+	nodo := c.Primero //entro como el primer valor
+	for nodo != nil { //verifico que no este vacio
+		if nodo.Carnet == valor { //como no esta vacio compara el valor por carnet
+			return true //si es igual entonces retorna true
 		}
-		nodo = nodo.siguiente
+		nodo = nodo.siguiente //pasa al siguiente
 	}
-	return false
+	return false //sino está retorna false
 }
 
 func (c *Cola) MostrarCola() {
@@ -85,7 +84,7 @@ func (c *Cola) GrafC() {
 	nombre_imagen := "cola.jpg"
 	texto := "digraph cola{\n"
 	texto += "rankdir=LR;\n"
-	texto += "node[shape = record];\n"
+	texto += "node[shape = record, style = solid, color = green, fillcolor = palegreen, fontname=\"Arial\"];\n"
 	texto += "nodonull[label=\"null\"];\n"
 	aux := c.Primero
 	contador := 0
