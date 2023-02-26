@@ -4,11 +4,6 @@ import (
 	"fmt"
 )
 
-type Datos struct {
-	hora  string
-	fecha string
-}
-
 type NodoPila struct {
 	Hora     string
 	Fecha    string

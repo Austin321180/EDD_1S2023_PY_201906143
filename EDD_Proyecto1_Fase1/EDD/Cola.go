@@ -17,7 +17,7 @@ type Cola struct {
 	tamaño  int
 }
 
-func (c *Cola) vacia() bool {
+func (c *Cola) Vacia() bool {
 	if c.tamaño == 0 {
 		return true
 	} else {
@@ -27,11 +27,11 @@ func (c *Cola) vacia() bool {
 
 func (c *Cola) Encolar(nomb string, carn int, contr string) {
 	if c.Buscar(carn) { //cuando voy a agregar mando a llamar a mi funcion buscar y si me retorna true imprime un mensaje y no retorna nada
-		fmt.Println("El carnet:", carn, "ya existe en el sistema.\n")
+		fmt.Println("El carnet:", carn, "ya existe en el sistema.")
 		return
 	} else { //si me retorna false entonces ya lo imgresa normal
 
-		if c.vacia() {
+		if c.Vacia() {
 			nuevoNodo := &NodoCola{nomb, carn, contr, nil}
 			c.Primero = nuevoNodo
 			fmt.Println("Se guardo correctamente ", nomb)
@@ -50,7 +50,7 @@ func (c *Cola) Encolar(nomb string, carn int, contr string) {
 }
 
 func (c *Cola) Desencolar() {
-	if c.vacia() {
+	if c.Vacia() {
 		fmt.Println("No hay datos en la cola")
 	} else {
 		c.Primero = c.Primero.siguiente
@@ -69,7 +69,7 @@ func (c *Cola) Buscar(valor int) bool { //buscar un archivo repetido
 }
 
 func (c *Cola) MostrarCola() {
-	if c.vacia() {
+	if c.Vacia() {
 		fmt.Println("No hay datos en la cola")
 	} else {
 		fmt.Println("En la cola: ", c.tamaño)
@@ -90,7 +90,7 @@ func (c *Cola) GrafC() {
 	contador := 0
 	for i := 0; i < c.tamaño; i++ {
 		texto = texto + "nodo" + strconv.Itoa(i) + " ["
-		texto = texto + "label = \"{" + strconv.Itoa(aux.Carnet) + " " + aux.Nombre + "}\"];\n"
+		texto = texto + "label = \"{" + strconv.Itoa(aux.Carnet) + " " + aux.Nombre + "|}\"];\n"
 		aux = aux.siguiente
 	}
 

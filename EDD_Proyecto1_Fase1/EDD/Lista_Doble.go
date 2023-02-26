@@ -6,22 +6,22 @@ import (
 )
 
 type AlumnosAceptados struct {
-	carnet     int
-	nombre     string
+	Carnet     int
+	Nombre     string
 	contraseña string
 }
 
 type Nodo_Doble struct {
-	alumno    *AlumnosAceptados
-	siguiente *Nodo_Doble
-	anterior  *Nodo_Doble
+	Alumno    *AlumnosAceptados
+	Siguiente *Nodo_Doble
+	Anterior  *Nodo_Doble
+	Bitacora  *PilaE
 }
 
 type Lista_Doble struct {
-	tamaño   int
-	inicio   *Nodo_Doble
-	final    *Nodo_Doble
-	bitacora *Nodo_Doble
+	tamaño int
+	Inicio *Nodo_Doble
+	Final  *Nodo_Doble
 }
 
 func (l *Lista_Doble) vacia() bool {
@@ -33,82 +33,151 @@ func (l *Lista_Doble) vacia() bool {
 }
 
 func (l *Lista_Doble) nuevoN(alumno *AlumnosAceptados) *Nodo_Doble {
-	return &Nodo_Doble{alumno, nil, nil}
+	return &Nodo_Doble{alumno, nil, nil, &PilaE{primero: nil, tamaño: 0}}
 }
 
 func (l *Lista_Doble) Agregar(carnet int, nombre string, contraseña string) {
-	nuevo := &AlumnosAceptados{carnet, nombre, contraseña}
-	if l.vacia() {
-		nueN := l.nuevoN(nuevo)
-		l.inicio = nueN
-		l.final = nueN
-		l.tamaño++
+	if l.BuscarN(carnet) {
+		fmt.Println("El carnet:", carnet, "ya existe en el sistema.")
 	} else {
-		nueN := l.nuevoN(nuevo)
-		if l.final.anterior == nil {
-			nueN.anterior = l.inicio
-			l.inicio.siguiente = nueN
-			l.final = nueN
+		nuevo := &AlumnosAceptados{carnet, nombre, contraseña}
+		if l.vacia() {
+			nueN := l.nuevoN(nuevo)
+			l.Inicio = nueN
+			l.Final = nueN
+			l.tamaño++
 		} else {
-			l.final.siguiente = nueN
-			nueN.anterior = l.final
-			l.final = nueN
+			actual := l.Inicio
+			for actual != nil && actual.Alumno.Carnet < carnet {
+				actual = actual.Siguiente
+			}
+			nueN := l.nuevoN(nuevo)
+			if actual == nil {
+				nueN.Anterior = l.Final
+				l.Final.Siguiente = nueN
+				l.Final = nueN
+			} else if actual.Anterior == nil {
+				nueN.Siguiente = l.Inicio
+				l.Inicio = nueN
+			} else {
+				anter := actual.Anterior
+				anter.Siguiente = nueN
+				nueN.Anterior = anter
+				nueN.Siguiente = actual
+				actual.Anterior = nueN
+			}
+			l.tamaño++
 		}
-		l.tamaño++
 	}
 }
 
 func (l *Lista_Doble) MostrarDatos() {
-	aux := l.inicio
+	aux := l.Inicio
 	if l.vacia() {
 		fmt.Println("Lista doble vacia")
 	} else {
 		for aux != nil {
 			fmt.Println("---------------------------------------------------------------------------------------")
-			fmt.Println("Carnet:", aux.alumno.carnet, " Nombre:", aux.alumno.nombre)
+			fmt.Println("Carnet:", aux.Alumno.Carnet, " Nombre:", aux.Alumno.Nombre, " Pila:", ValP(aux.Bitacora))
 			fmt.Println("---------------------------------------------------------------------------------------")
-			aux = aux.siguiente
+			aux = aux.Siguiente
 		}
 	}
 }
 
-func (l *Lista_Doble) Ingresar(user int, pass string) bool {
-	nodo := l.inicio
-	for nodo != nil {
-		if nodo.alumno.carnet == user && nodo.alumno.contraseña == pass {
-			return true
+func (l *Lista_Doble) AgregarPila(carn int, fecha string, hora string) {
+	if l.vacia() {
+		fmt.Println("Pila vacia")
+	} else {
+		aux := l.Inicio
+		for i := 0; i < l.tamaño; i++ {
+			if carn == aux.Alumno.Carnet {
+				aux.Bitacora.PushE(fecha, hora)
+			}
+			aux = aux.Siguiente
 		}
-		nodo = nodo.siguiente
 	}
-	return false
+}
+
+func (l *Lista_Doble) iniciarSesion(carnet int, password string) string {
+	alumno := l.Ingresar(carnet, password)
+	if alumno == nil {
+		fmt.Println("error")
+	}
+	return alumno.Nombre
+}
+
+func ValP(p *PilaE) string {
+	texto := ""
+	aux := p.primero
+	if aux != nil {
+		for aux != nil {
+			texto += "Fecha: " + aux.fechaE + " Hora: " + aux.horaE + " "
+			aux = aux.siguiente
+		}
+	} else {
+		texto = ""
+	}
+	return texto
+}
+
+func (l *Lista_Doble) BuscarN(carnet int) bool {
+	nodo := l.Inicio  //entro como el primer valor
+	for nodo != nil { //verifico que no este vacio
+		if nodo.Alumno.Carnet == carnet { //como no esta vacio compara el valor por carnet
+			return true //si es igual entonces retorna true
+		}
+		nodo = nodo.Siguiente //pasa al siguiente
+	}
+	return false //sino está retorna false
+}
+
+func (l *Lista_Doble) Ingresar(user int, pass string) *AlumnosAceptados {
+	nodo := l.Inicio
+	for nodo != nil {
+		if nodo.Alumno.Carnet == user && nodo.Alumno.contraseña == pass {
+			return nodo.Alumno
+		}
+		nodo = nodo.Siguiente
+	}
+	return nil
 }
 
 func (l *Lista_Doble) GrafLD() {
 	nombre_archivo := "./listadoble.dot"
 	nombre_imagen := "listadoble.jpg"
-	texto := "digraph listadoble{\n"
-	texto += "rankdir=LR;\n"
-	texto += "node[shape = record, style = solid, color = green, fillcolor = palegreen, fontname=\"Arial\"];\n"
-	texto += "nodonull[label=\"null\"];\n"
-	texto += "nodonull2[label=\"null\"];\n"
-	aux := l.inicio
-	contador := 0
+	texto := "digraph LinkedList {\n"
+	texto += "rankdir=TB;\n"
+	texto += "node [shape=box, style=filled, fillcolor=palegreen];\n"
+	aux := l.Inicio
 	for i := 0; i < l.tamaño; i++ {
-		texto = texto + "nodo" + strconv.Itoa(i) + " ["
-		texto = texto + "label = \"{" + strconv.Itoa(aux.alumno.carnet) + " " + aux.alumno.nombre + "}\"];\n"
-		aux = aux.siguiente
+		if aux != nil {
+			texto = texto + "nodo" + strconv.Itoa(i) + " ["
+			texto = texto + "label = \"" + aux.Alumno.Nombre + " " + strconv.Itoa(aux.Alumno.Carnet) + ""
+			auxBitacora := aux.Bitacora.primero
+			texto = texto + "\"];\n"
+			texto = texto + "n" + strconv.Itoa(i) + " [ shape= record, label=\"{"
+			for j := 0; j < aux.Bitacora.tamaño; j++ {
+				texto = texto + "| Fecha: " + auxBitacora.fechaE + "\\nHora: " + auxBitacora.horaE + ""
+				auxBitacora = auxBitacora.siguiente
+			}
+			texto = texto + "}\"];\n"
+			aux = aux.Siguiente
+		}
 	}
-
 	for i := 0; i < l.tamaño-1; i++ {
 		c := i + 1
 		texto += "nodo" + strconv.Itoa(i) + "-> nodo" + strconv.Itoa(c) + ";\n"
 		texto += "nodo" + strconv.Itoa(c) + "-> nodo" + strconv.Itoa(i) + ";\n"
-		contador = c
 	}
-	texto += "nodo" + strconv.Itoa(contador) + "->nodonull2;\n"
-	texto += "nodonull2->nodo" + strconv.Itoa(contador) + ";\n"
-	texto += "nodonull->nodo0;\n"
-	texto += "nodo0->nodonull;"
+	for i := 0; i < l.tamaño; i++ {
+		texto += "nodo" + strconv.Itoa(i) + "-> n" + strconv.Itoa(i) + ";\n"
+	}
+	texto += "{rank=same;"
+	for i := 0; i < l.tamaño; i++ {
+		texto += "nodo" + strconv.Itoa(i) + ";"
+	}
+	texto += "}\n"
 	texto += "}"
 	crearArch(nombre_archivo)
 	escribirArch(texto, nombre_archivo)
@@ -119,20 +188,22 @@ func (l *Lista_Doble) Graf_Json() {
 	nombre_json := "Alumnos.json"
 	texto := "{\n"
 	texto += "\t\"Alumnos\": [\n"
-	aux := l.inicio
+	aux := l.Inicio
 	for i := 0; i < l.tamaño; i++ {
-		texto = texto + "\t\t{\n"
-		texto = texto + "\t\t\t\"nombre\": \"" + aux.alumno.nombre + "\",\n"
-		texto = texto + "\t\t\t\"carnet\": " + strconv.Itoa(aux.alumno.carnet) + ",\n"
-		texto = texto + "\t\t\t\"password\": \"" + aux.alumno.contraseña + "\",\n"
-		texto = texto + "\t\t\t\"Carpeta_Raiz\": \"/\"\n"
-		texto = texto + "\t\t}"
-		if aux.siguiente != nil {
-			texto = texto + ",\n"
-		} else {
-			texto = texto + "\n"
+		if aux != nil {
+			texto = texto + "\t\t{\n"
+			texto = texto + "\t\t\t\"nombre\": \"" + aux.Alumno.Nombre + "\",\n"
+			texto = texto + "\t\t\t\"carnet\": " + strconv.Itoa(aux.Alumno.Carnet) + ",\n"
+			texto = texto + "\t\t\t\"password\": \"" + aux.Alumno.contraseña + "\",\n"
+			texto = texto + "\t\t\t\"Carpeta_Raiz\": \"/\"\n"
+			texto = texto + "\t\t}"
+			if aux.Siguiente != nil {
+				texto = texto + ",\n"
+			} else {
+				texto = texto + "\n"
+			}
+			aux = aux.Siguiente
 		}
-		aux = aux.siguiente
 	}
 	texto += "\t]\n"
 	texto += "}"

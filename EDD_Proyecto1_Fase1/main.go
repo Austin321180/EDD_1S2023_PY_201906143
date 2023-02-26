@@ -18,10 +18,11 @@ func main() {
 	c := &edd.Cola{}
 	ld := &edd.Lista_Doble{}
 	p := &edd.Pila{}
-	menu_login(ld, p, c)
+	pe := &edd.PilaE{}
+	menu_login(ld, p, c, pe)
 }
 
-func menu_login(ld *edd.Lista_Doble, p *edd.Pila, c *edd.Cola) {
+func menu_login(ld *edd.Lista_Doble, p *edd.Pila, c *edd.Cola, pe *edd.PilaE) {
 	salir := false
 	opc := 0
 
@@ -48,13 +49,22 @@ func menu_login(ld *edd.Lista_Doble, p *edd.Pila, c *edd.Cola) {
 				if err != nil {
 					fmt.Println("canet equivocado")
 				}
-
+				alumno := ld.Ingresar(carnInt, contraseña)
 				if usu == "admin" && cont == "admin" {
 					fmt.Println("Bienvenido", usu)
-					administrador(ld, p, c)
+					administrador(ld, p, c, pe)
 					break
-				} else if ld.Ingresar(carnInt, contraseña) {
-					estudiantes(ld)
+				} else if alumno != nil {
+					salir := false
+					for !salir {
+						fmt.Println("---------------Estudiante--------------------")
+						fmt.Println("inicio sesión", alumno.Nombre)
+						fmt.Println("Hora:", hora(), "fecha:", fecha())
+						ld.AgregarPila(alumno.Carnet, fecha(), hora())
+						fmt.Println("-------------------------------------------")
+						ld.GrafLD()
+						break
+					}
 					break
 				} else {
 					fmt.Println("Datos incorrectos")
@@ -70,7 +80,7 @@ func menu_login(ld *edd.Lista_Doble, p *edd.Pila, c *edd.Cola) {
 	}
 }
 
-func administrador(ld *edd.Lista_Doble, p *edd.Pila, c *edd.Cola) {
+func administrador(ld *edd.Lista_Doble, p *edd.Pila, c *edd.Cola, pe *edd.PilaE) {
 	op := 0
 	sal := false
 	var (
@@ -91,39 +101,52 @@ func administrador(ld *edd.Lista_Doble, p *edd.Pila, c *edd.Cola) {
 		fmt.Scan(&op)
 		switch op {
 		case 1:
-			fmt.Println("---------Estudiantes Pendientes-------------")
-			c.MostrarCola()
-			opc := 0
-			s := false
-			for !s {
-				fmt.Println("1. Aceptar Estudiante ")
-				fmt.Println("2. Rechazar Estudiante")
-				fmt.Println("3. Volver")
-				fmt.Println("--------------------------------------------")
-				fmt.Println("Elija su opcion: ")
-				fmt.Scan(&opc)
-				switch opc {
-				case 1:
-					fmt.Println("******************************************************")
-					fmt.Println("se acepto a: ", c.Primero.Nombre)
-					ld.Agregar(c.Primero.Carnet, c.Primero.Nombre, c.Primero.Contraseña)
-					c.Desencolar()
-					fmt.Println("")
-					p.Push(hora(), fecha(), true)
-					c.MostrarCola()
-					p.GrafP(true)
-					c.GrafC()
-					//ld.GrafLD()
-					//ld.Graf_Json()
-				case 2:
-					fmt.Println("Se rechazo estudiante")
-					c.Desencolar()
-					c.MostrarCola()
-					c.GrafC()
-					p.Push(hora(), fecha(), false)
-					p.GrafP(false)
-				case 3:
-					s = true
+			if c.Vacia() {
+				fmt.Println("No hay datos")
+				break
+			} else {
+				fmt.Println("---------Estudiantes Pendientes-------------")
+				c.MostrarCola()
+				opc := 0
+				s := false
+				for !s {
+					fmt.Println("1. Aceptar Estudiante ")
+					fmt.Println("2. Rechazar Estudiante")
+					fmt.Println("3. Volver")
+					fmt.Println("--------------------------------------------")
+					fmt.Println("Elija su opcion: ")
+					fmt.Scan(&opc)
+					switch opc {
+					case 1:
+						if c.Vacia() {
+							break
+						} else {
+							fmt.Println("******************************************************")
+							fmt.Println("se acepto a: ", c.Primero.Nombre)
+							ld.Agregar(c.Primero.Carnet, c.Primero.Nombre, c.Primero.Contraseña)
+							c.Desencolar()
+							fmt.Println("")
+							p.Push(hora(), fecha(), true)
+							c.MostrarCola()
+							p.GrafP(true)
+							c.GrafC()
+							ld.GrafLD()
+							ld.Graf_Json()
+						}
+					case 2:
+						if c.Vacia() {
+							break
+						} else {
+							fmt.Println("Se rechazo estudiante")
+							c.Desencolar()
+							c.MostrarCola()
+							c.GrafC()
+							p.Push(hora(), fecha(), false)
+							p.GrafP(false)
+						}
+					case 3:
+						s = true
+					}
 				}
 			}
 		case 2:
@@ -153,26 +176,8 @@ func administrador(ld *edd.Lista_Doble, p *edd.Pila, c *edd.Cola) {
 			c.GrafC()
 		case 5:
 			fmt.Println("Sesion Cerrada")
-			menu_login(ld, p, c)
+			menu_login(ld, p, c, pe)
 			sal = true
-		}
-	}
-}
-
-func estudiantes(ld *edd.Lista_Doble) {
-	op := 0
-	salir := false
-	for !salir {
-		fmt.Print("---------------Estudiante--------------------")
-		fmt.Println("inicio sesión")
-		fmt.Println("Hora:", hora(), "fecha:", fecha())
-		fmt.Println("1 Cerrar sesion")
-		fmt.Println("-------------------------------------------")
-		fmt.Scanln(&op)
-		switch op {
-		case 1:
-			fmt.Println("Salio de la sesion ")
-			salir = true
 		}
 	}
 }
@@ -235,7 +240,7 @@ func hora() string {
 	}
 	//segundos
 	if tiempo.Second() < 10 {
-		final = final + "0" + strconv.Itoa(tiempo.Second()) + ":"
+		final = final + "0" + strconv.Itoa(tiempo.Second())
 	} else {
 		final = final + strconv.Itoa(tiempo.Second())
 	}
