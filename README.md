@@ -40,6 +40,18 @@ go mod - Para que los paquetes que tengamos en una carpeta aparte los reconozca 
 go mod init
 ```
 
+Para entrar en una carpeta
+
+```sh
+cd nombrecarpeta/  
+```
+
+Para salir de una carpeta
+
+```sh
+cd ..  
+```
+
 Para ejecutar la aplicación
 
 ```sh
