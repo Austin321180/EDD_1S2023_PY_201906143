@@ -1,9 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+        crossorigin="anonymous"></script>
     <title>Pagina Principal</title>
+
 </head>
+
 <body>
-    <h1>Hola Mundo</h1>
+    <div class="container">
+        <h1>Administrador</h1>
+        <!--<input type="text" id="valor" class="form-control" placeholder="Ej. 9,8,10,6 o cristian,alberto"
+            aria-label="Example text with button addon" aria-describedby="button-addon1">-->
+        <br>
+        <div class="input-group mb-3">
+            <button class="btn btn-info" type="button" id="button-addon1" onclick="agregarVarios()">Agregar
+                Cadenas</button>
+            <button class="btn btn-info" type="button" id="button-addon1" onclick="agregarVariosNumeros()">Agregar
+                Numeros</button>
+            <button class="btn btn-info" type="button" id="button-addon1" onclick="refrecarArbol()">Arbol</button>
+            <button class="btn btn-info" type="button" id="button-addon1" onclick="refrescarTabla()">Tabla</button>
+            <button type="button" onclick="CargaJson()" class="btn btn-info">Carga Masiva</button>
+        </div>
+        <input type="file" id="carga">
+        <div>
+            <img id="image">
+            <div>
+                <img id="image1">
+                <img id="image2">
+                <img id="image3">
+            </div>
+        </div>
+    </div>
+    <script src="../EDD_Proyecto1_Fase2/EDD/ArbolAVL.js"></script>
 </body>
+
 </html>
