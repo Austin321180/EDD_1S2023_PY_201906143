@@ -4,8 +4,10 @@ class NodoArbolAVL {
         this.derecho = null
         this.valor = valor
         this.nombre = nombre
+        this.altura = 1
         this.password = password
         this.carpetaRaiz = carpetaRaiz
+        this.factor_equilibrio = 0
     }
 }
 
@@ -14,18 +16,71 @@ class ArbolAVL {
         this.raiz = null
     }
 
+    Altura(raiz) {
+        return raiz === null ? 0 : raiz.altura
+    }
+
+    Equilibrio(raiz) {
+        return raiz === null ? 0 : (this.Altura(raiz.derecho) - this.Altura(raiz.izquierdo))
+    }
+
+    RotacionIzq(raiz) {
+        let raiz_derecho = raiz.derecho
+        let hijo_izquierdo = raiz_derecho.izquierdo
+        raiz_derecho.izquierdo = raiz
+        raiz.derecho = hijo_izquierdo
+        raiz.altura = 1 + Math.max(this.Altura(raiz.izquierdo), this.Altura(raiz.derecho))
+        raiz_derecho.altura = 1 + Math.max(this.Altura(raiz_derecho.izquierdo), this.Altura(raiz_derecho.derecho))
+        raiz.factor_equilibrio = this.Equilibrio(raiz)
+        raiz_derecho.factor_equilibrio = this.Equilibrio(raiz_derecho)
+        return raiz_derecho
+    }
+
+    RotacionDer(raiz) {
+        let raiz_izquierdo = raiz.izquierdo
+        let hijo_derecho = raiz_izquierdo.derecho
+        raiz_izquierdo.derecho = raiz
+        raiz.izquierdo = hijo_derecho
+        raiz.altura = 1 + Math.max(this.Altura(raiz.izquierdo), this.Altura(raiz.derecho))
+        raiz_izquierdo.altura = 1 + Math.max(this.Altura(raiz_izquierdo.izquierdo), this.Altura(raiz_izquierdo.derecho))
+        raiz.factor_equilibrio = this.Equilibrio(raiz)
+        raiz_izquierdo.factor_equilibrio = this.Equilibrio(raiz_izquierdo)
+        return raiz_izquierdo
+
+    }
+
     InsertarNodoArbolAVL(nodo, raiz) {
         if (raiz === null) {
             raiz = nodo
         } else {
             if (raiz.valor === nodo.valor) {
-                return raiz
+                raiz.valor = nodo.valor
             } else if (raiz.valor < nodo.valor) {
-                raiz.derecho = this.InsertarNodoArbolAVL(nodo, raiz.derecho)
+                raiz.derecho = this.InsertarNodoArbolAVL(nodo, raiz.derecho);
             } else {
-                raiz.izquierdo = this.InsertarNodoArbolAVL(nodo, raiz.izquierdo)
+                raiz.izquierdo = this.InsertarNodoArbolAVL(nodo, raiz.izquierdo);
             }
-            console.log(raiz.nombre + " " + raiz.valor)
+        }
+        raiz.altura = 1 + Math.max(this.Altura(raiz.izquierdo), this.Altura(raiz.derecho))
+        let balanceo = this.Equilibrio(raiz) //(-2)
+        raiz.factor_equilibrio = balanceo
+        //Rotacion Simple a la Izquierda
+        if (balanceo > 1 && nodo.valor > raiz.derecho.valor) {
+            return this.RotacionIzq(raiz)
+        }
+        //Rotacion Simple a la Derecha
+        if (balanceo < -1 && nodo.valor < raiz.izquierdo.valor) {
+            return this.RotacionDer(raiz)
+        }
+        //Rotacion Doble a la Izquierda
+        if (balanceo > 1 && nodo.valor < raiz.derecho.valor) {
+            raiz.derecho = this.RotacionDer(raiz.derecho)
+            return this.RotacionIzq(raiz)
+        }
+        //Rotacion Doble a la Derecha
+        if (balanceo < -1 && nodo.valor > raiz.izquierdo.valor) {
+            raiz.izquierdo = this.RotacionIzq(raiz.izquierdo)
+            return this.RotacionDer(raiz)
         }
         return raiz
     }
@@ -102,7 +157,7 @@ class ArbolAVL {
         if (raiz !== null) {
             cadena += "\"";
             cadena += raiz.valor;
-            cadena += "\" ;";
+            cadena += "\" [label=\"" + raiz.valor + raiz.altura + raiz.nombre + "\"];";
             if (!(raiz.izquierdo === null) && !(raiz.derecho === null)) {
                 cadena += " x" + numero + " [label=\"\",width=.1,style=invis];"
                 cadena += "\"";
@@ -142,21 +197,13 @@ class ArbolAVL {
     }
 
     TablaArbol(raiz) {
-        let cadena = ""
+        let cadena = "";
         if (raiz !== null) {
-            if (!(raiz.izquierdo === null) && !(raiz.derecho === null)) {
-                cadena += "<tr><td>" + raiz.valor + "</td><td>" + raiz.nombre + "</td></tr>"
-                cadena += this.TablaArbol(raiz.izquierdo)
-                cadena += this.TablaArbol(raiz.derecho)
-            } else if (!(raiz.izquierdo === null) && (raiz.derecho === null)) {
-                cadena += "<tr><td>" + raiz.valor + "</td><td>" + raiz.nombre + "</td></tr>"
-                cadena += this.TablaArbol(raiz.izquierdo)
-            } else if ((raiz.izquierdo === null) && !(raiz.derecho === null)) {
-                cadena += "<tr><td>" + raiz.valor + "</td><td>" + raiz.nombre + "</td></tr>"
-                cadena += this.TablaArbol(raiz.derecho)
-            }
+            cadena += "<tr><td>" + raiz.valor + "</td><td>" + raiz.nombre + "</td></tr>";
+            cadena += this.TablaArbol(raiz.izquierdo);
+            cadena += this.TablaArbol(raiz.derecho);
         }
-        return cadena
+        return cadena;
     }
 
     GraficarArbol() {
@@ -166,6 +213,8 @@ class ArbolAVL {
             cadena += "node [shape=circle];"
             cadena += this.ValoresArbol(this.raiz, 0)
             cadena += "}"
+        } else {
+            cadena = "No hay datos"
         }
         return cadena
     }
@@ -177,7 +226,7 @@ class ArbolAVL {
             cadena += "node [shape=plaintext];"
             cadena += "TablaAlumnos[label=<<table border=\"1\" cellborder=\"1\" cellspacing=\"0\">"
             cadena += "<tr><td colspan=\"2\" bgcolor=\"green\"><b>Alumnos</b></td></tr>"
-            cadena+="<tr><td bgcolor=\"green\"><b>Carnet</b></td><td bgcolor=\"green\"><b>Nombre</b></td></tr>"
+            cadena += "<tr><td bgcolor=\"green\"><b>Carnet</b></td><td bgcolor=\"green\"><b>Nombre</b></td></tr>"
             cadena += this.TablaArbol(this.raiz)
             cadena += "</table>>];"
             cadena += "}"
@@ -207,19 +256,28 @@ class ArbolAVL {
 }
 
 const treeAvl = new ArbolAVL();
+const inputElement = document.getElementById("carga");
+inputElement.addEventListener("change", onChange, false);
+function onChange() {
+    var reader = new FileReader();
+    reader.onload = onReaderLoad;
+    reader.readAsText(event.target.files[0]);
+}
 
-function CargaJson() {
-    const fileInput = document.getElementById('carga');
-    const file = fileInput.files[0];
-    const reader = new FileReader();
-    reader.onload = (e) => {
-        const json = JSON.parse(e.target.result);
-        console.log(json);
-        json.alumnos.forEach((alumno) => {
-            treeAvl.InsertarDatos(alumno.nombre, alumno.carnet, alumno.password, alumno.Carpeta_Raiz)
-        });
-    };
-    reader.readAsText(file);
+function onReaderLoad(event) {
+    var obj = JSON.parse(event.target.result);
+    for (var i = 0; i < obj.alumnos.length; i++) {
+        treeAvl.InsertarDatos(obj.alumnos[i].nombre, obj.alumnos[i].carnet, obj.alumnos[i].password, obj.alumnos[i].Carpeta_Raiz)
+        localStorage.setItem(obj.alumnos[i].carnet, JSON.stringify({
+            nombre: obj.alumnos[i].nombre,
+            password: obj.alumnos[i].password,
+            Carpeta_Raiz: obj.alumnos[i].Carpeta_Raiz
+        }));
+    }
+    console.log(localStorage);
+    //console.log(JSON.parse(localStorage.getItem('carnet')));
+    refrescarTabla();
+    refrecarArbol();
 }
 
 function refrescarTabla() {

@@ -17,6 +17,30 @@
             "carnet": 201780044,
             "password": "leo1234",
             "Carpeta_Raiz": "/"
+        },
+        {
+            "nombre": "Austin Alvarez",
+            "carnet": 201906143,
+            "password": "hola123",
+            "Carpeta_Raiz": "/"
+        },
+        {
+            "nombre": "Juan Perez",
+            "carnet": 201616802,
+            "password": "hola12",
+            "Carpeta_Raiz": "/"
+        },
+        {
+            "nombre": "Maria Martinez",
+            "carnet": 201115078,
+            "password": "hola1",
+            "Carpeta_Raiz": "/"
+        },
+        {
+            "nombre": "Carlos Castano",
+            "carnet": 201805142,
+            "password": "hola",
+            "Carpeta_Raiz": "/"
         }
     ]
 }

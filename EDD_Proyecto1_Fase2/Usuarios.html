@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Usuarios</title>
+</head>
+
+<body>
+    <h1>Usuarios</h1>
+    <div id="username"></div>
+    <script>
+        // Obtener el nombre de usuario del sessionStorage
+        var username = sessionStorage.getItem('username');
+        // Agregar el nombre de usuario al div "username"
+        document.getElementById("username").innerHTML = "Bienvenido, " + username;
+    </script>
+    <button onclick="logout()">Cerrar sesión</button>
+    <script>
+        function logout() {
+            window.location.href = "../index.html";
+        }
+    </script>
+</body>
+
+</html>
