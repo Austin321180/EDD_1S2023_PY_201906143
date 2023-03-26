@@ -2,24 +2,74 @@
 <html lang="en">
 
 <head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+        crossorigin="anonymous"></script>
     <title>Usuarios</title>
+    <style>
+        .green-container {
+            background-color: green;
+            padding: 10px;
+            border-radius: 5px;
+            display: inline-block;
+            width: 200px;
+            height: auto;
+            float: left;
+            margin-left: 20px;
+            margin-bottom: 20px;
+            margin-top: 20px;
+            text-align: center;
+            color: #ffffff;
+        }
+
+        .green-container * {
+            margin: 10px;
+        }
+
+        .green-container button {
+            margin-bottom: 10px;
+        }
+    </style>
+
+
 </head>
 
 <body>
     <h1>Usuarios</h1>
-    <div id="username"></div>
-    <script>
-        // Obtener el nombre de usuario del sessionStorage
-        var username = sessionStorage.getItem('username');
-        // Agregar el nombre de usuario al div "username"
-        document.getElementById("username").innerHTML = "Bienvenido, " + username;
+    <div class="container d-flex flex-column align-items-start">
+        <div class="input-group mb-3">
+            <button class="btn btn-primary" type="button" id="button-addon1" onclick="agregarVarios()">Añadir</button>
+            <input type="text" id="ruta" class="form-control" placeholder="Ej. /Documentos/Prueba" aria-label="Example text with button addon" aria-describedby="button-addon1">
+        </div>
+        <div>
+            <input type="text" id="carpeta" class="form-control" placeholder="Ej. Imagenes" aria-label="Example text with button addon" aria-describedby="button-addon1">
+        </div>
+    </div>
+
+    <div class="container d-flex flex-column align-items-start green-container">
+        <div id="username"></div>
+        <button type="button" class="btn btn-primary">Eliminar Carpeta</button>
+    </div>
+    <div class="container d-flex flex-column align-items-start">
+        <button onclick="logout()" class="btn btn-primary">Cerrar sesión</button>
+    </div>
+    <div>
+        <img id="image">
+    </div>
+    <script src="../EDD_Proyecto1_Fase2/EDD/ArbolMoN.js">
     </script>
-    <button onclick="logout()">Cerrar sesión</button>
     <script>
+        var username = sessionStorage.getItem('username');
+        document.getElementById("username").innerHTML = "Bienvenido " + username;
+
         function logout() {
             window.location.href = "../index.html";
         }
     </script>
+
+
 </body>
 
 </html>
