@@ -8,36 +8,71 @@
         integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
         crossorigin="anonymous"></script>
     <title>Pagina Principal</title>
+    <style>
+        .cerrar-container {
+            margin-right: 10px;
+            margin-left: 900px;
+            margin-bottom: 20px;
+        }
 
+        #image-container {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #image {
+            width: 30%;
+            height: auto;
+        }
+
+        #image1 {
+            width: 60%;
+            height: auto;
+        }
+
+
+        #image2,
+        #image3 {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        #image2-container {
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
 </head>
 
 <body>
     <div class="container">
         <h1>Administrador</h1>
-        <!--<input type="text" id="valor" class="form-control" placeholder="Ej. 9,8,10,6 o cristian,alberto"
-            aria-label="Example text with button addon" aria-describedby="button-addon1">-->
+        <div class="container d-flex flex-column align-items-start cerrar-container">
+            <button onclick="logout()" class="btn btn-primary">Cerrar sesión</button>
+        </div>
         <br>
         <div class="input-group mb-3">
-            <button class="btn btn-info" type="button" id="button-addon1" onclick="agregarVarios()">Agregar
-                Cadenas</button>
-            <button class="btn btn-info" type="button" id="button-addon1" onclick="agregarVariosNumeros()">Agregar
-                Numeros</button>
+            <!--Post-Orden-->
+            <button class="btn btn-info" type="button" id="button-addon1"
+                onclick="refrescarArbolPostOrden()">Post-Orden</button>
+            <!--Pre-Orden-->
+            <button class="btn btn-info" type="button" id="button-addon1"
+                onclick="agregarVariosNumeros()">Pre-Orden</button>
+            <!--In-Orden-->
             <button class="btn btn-info" type="button" id="button-addon1" onclick="refrecarArbol()">Arbol</button>
-            <button class="btn btn-info" type="button" id="button-addon1" onclick="refrescarTabla()">Tabla</button>
-            <button type="button" onclick="CargaJson()" class="btn btn-info">Carga Masiva</button>
+            <button type="button" onclick="refrescarTabla()" class="btn btn-info">Tabla</button>
         </div>
         <input type="file" id="carga">
-        <div>
-            <img id="image">
+        <div id="image-container">
             <div>
+                <img id="image">
                 <img id="image1">
+            </div>
+            <div id="image2-container">
                 <img id="image2">
                 <img id="image3">
             </div>
         </div>
-    </div>
-    <div class="container">
-        <button onclick="logout()" class="btn btn-primary">Cerrar sesión</button>
     </div>
     <script>
         function logout() {

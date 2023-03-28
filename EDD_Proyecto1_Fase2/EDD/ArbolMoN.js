@@ -1,5 +1,5 @@
 class NodoArbolNario {
-    constructor(valor, id){
+    constructor(valor, id) {
         this.siguiente = null;
         this.valor = valor;
         this.primero = null;
@@ -14,7 +14,6 @@ class ArbolNario {
     }
 
     BuscarCarpeta(carpeta_nueva, lista_carpeta) {
-        //Si la nueva carpeta se creara en la raiz, se buscara si existe o no
         if (lista_carpeta[1] === "" && this.raiz.primero !== null) {
             let aux = this.raiz.primero
             while (aux) {
@@ -25,15 +24,12 @@ class ArbolNario {
             }
             return 2
         }
-        //Si la nueva carpeta se creara en la raiz pero no existe ninguna carpeta
         else if (lista_carpeta[1] === "" && this.raiz.primero === null) {
             return 5
         }
-        //Si la nueva carpeta se creara en algun directorio pero la raiz no posee ninguna carpeta
         else if (lista_carpeta[1] !== "" && this.raiz.primero === null) {
             return 3
         }
-        //Buscamos el directorio padre y revisar si en sus hijos existe la carpeta
         else if (lista_carpeta[1] !== "" && this.raiz.primero !== null) {
             let aux = this.raiz.primero
             let nivel = lista_carpeta.length
@@ -70,7 +66,6 @@ class ArbolNario {
 
         }
     }
-    //Funcion solo para ordenar la lista de hijos cuando el padre posee varios hijos
     insertarOrdenado(raiz, nuevoNodo) {
         let piv = raiz.primero
         if (nuevoNodo.valor < raiz.primero.valor) {
@@ -96,32 +91,23 @@ class ArbolNario {
         }
     }
     insertarHijos(carpeta_nueva, lista_carpeta) {
-        /**
-         * creamos el nuevo nodo y aumentamos la cantidad de nodos creados
-         */
         const nuevoNodo = new NodoArbolNario(carpeta_nueva, this.nodo_creados)
         this.nodo_creados++
-        //Corroboramos si la insercion es en la raiz y si la raiz no tiene ninguna carpeta
         if (lista_carpeta[1] === "" && this.raiz.primero === null) {
             this.raiz.primero = nuevoNodo
         }
-        //Corroboramos si la insercion es en la raiz y pero la raiz ya tiene carpetas
         else if (lista_carpeta[1] === "" && this.raiz.primero !== null) {
             this.raiz = this.insertarOrdenado(this.raiz, nuevoNodo)
         }
-        //Corroboramos si la insercion es en algun directorio que no es la raiz
         else if (lista_carpeta[1] !== "" && this.raiz.primero !== null) {
             let aux = this.raiz.primero
             let nivel = lista_carpeta.length
             let posicion = 1;
-            //Recorremos hasta llegar a la profundidad maxima donde se quiere insertar la nueva carpeta
             for (var i = 1; i < nivel; i++) {
                 if (aux !== null) {
                     while (aux) {
-                        //Comparamos si las posiciones de la lista de carpetas es igual a la del nodo actual sino seguimos buscando
                         if (posicion < lista_carpeta.length && lista_carpeta[posicion] === aux.valor) {
                             posicion++
-                            //Esta comparacion es para asegurarnos que nos quedaremos en el nodo padre
                             if (aux.primero !== null && posicion < lista_carpeta.length) {
                                 aux = aux.primero
                             }
@@ -134,7 +120,6 @@ class ArbolNario {
                     break;
                 }
             }
-            //Si la carpeta padre ya tiene carpetas se agrega en el primero sino se manda a insertar en el orden correcto
             if (aux.primero === null) {
                 aux.primero = nuevoNodo
             } else {
@@ -202,6 +187,38 @@ class ArbolNario {
         }
         return cadena
     }
+
+    Archivos(raiz) {
+        let cadena = ""
+        if (raiz !== null) {
+            cadena += "<TD bgcolor=\"yellow\" gradientangle=\"315\">Carpeta: " + raiz.valor + "</TD>"
+            let hijo = raiz.primero;
+            while (hijo !== null) {
+                cadena += this.Archivos(hijo);
+                hijo = hijo.siguiente;
+            }
+        }
+        return cadena
+    }
+
+    GraficarArchivos() {
+        let cadena = ""
+        if (this.raiz !== null) {
+            cadena += "digraph G {"
+            cadena += "fontname=\"Helvetica,Arial,sans-serif\""
+            cadena += "node [fontname=\"Helvetica,Arial,sans-serif\"]"
+            cadena += "edge [fontname=\"Helvetica,Arial,sans-serif\"]"
+            cadena += "a0 [shape=none label=<"
+            cadena += "<TABLE border=\"0\" cellspacing=\"10\" cellpadding=\"10\">"
+            cadena += "<TR>"
+            cadena += this.Archivos(this.raiz)
+            cadena += "</TR>"
+            cadena += "</TABLE>>]"
+            cadena += "}"
+        }
+        return cadena
+    }
+
     conexionRamas(raiz, padre) {
         let cadena = ""
         let aux = raiz
@@ -229,7 +246,8 @@ function agregarVarios() {
         alert("Hubo un error al insertar el nodo")
     }
     document.getElementById("carpeta").value = "";
-    refrescarArbol();
+    //refrescarArbol();
+    //refrecarArchivos();
 
 }
 
@@ -238,4 +256,12 @@ function refrescarArbol() {
     let body = arbolnario.grafica_arbol();
     $("#image").attr("src", url + body);
     document.getElementById("carpeta").value = "";
+}
+
+function refrecarArchivos() {
+    let url = 'https://quickchart.io/graphviz?graph=';
+    let body = arbolnario.GraficarArchivos();
+    $("#image1").attr("src", url + body);
+    document.getElementById("carpeta").value = "";
+    console.log(url + body)
 }

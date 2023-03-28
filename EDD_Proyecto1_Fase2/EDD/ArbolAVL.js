@@ -62,22 +62,18 @@ class ArbolAVL {
             }
         }
         raiz.altura = 1 + Math.max(this.Altura(raiz.izquierdo), this.Altura(raiz.derecho))
-        let balanceo = this.Equilibrio(raiz) //(-2)
+        let balanceo = this.Equilibrio(raiz)
         raiz.factor_equilibrio = balanceo
-        //Rotacion Simple a la Izquierda
         if (balanceo > 1 && nodo.valor > raiz.derecho.valor) {
             return this.RotacionIzq(raiz)
         }
-        //Rotacion Simple a la Derecha
         if (balanceo < -1 && nodo.valor < raiz.izquierdo.valor) {
             return this.RotacionDer(raiz)
         }
-        //Rotacion Doble a la Izquierda
         if (balanceo > 1 && nodo.valor < raiz.derecho.valor) {
             raiz.derecho = this.RotacionDer(raiz.derecho)
             return this.RotacionIzq(raiz)
         }
-        //Rotacion Doble a la Derecha
         if (balanceo < -1 && nodo.valor > raiz.izquierdo.valor) {
             raiz.izquierdo = this.RotacionIzq(raiz.izquierdo)
             return this.RotacionDer(raiz)
@@ -157,26 +153,45 @@ class ArbolAVL {
         if (raiz !== null) {
             cadena += "\"";
             cadena += raiz.valor;
-            cadena += "\" [label=\"" + raiz.valor + raiz.altura + raiz.nombre + "\"];";
+            cadena += "\\n"
+            cadena += raiz.nombre
+            cadena += "\\nAltura: ";
+            cadena += raiz.altura;
+            cadena += "\"";
             if (!(raiz.izquierdo === null) && !(raiz.derecho === null)) {
                 cadena += " x" + numero + " [label=\"\",width=.1,style=invis];"
                 cadena += "\"";
                 cadena += raiz.valor;
+                cadena += "\\n"
+                cadena += raiz.nombre
+                cadena += "\\nAltura: ";
+                cadena += raiz.altura;
                 cadena += "\" -> ";
                 cadena += this.ValoresArbol(raiz.izquierdo, numero)
                 cadena += "\"";
                 cadena += raiz.valor;
+                cadena += "\\n"
+                cadena += raiz.nombre
+                cadena += "\\nAltura: ";
+                cadena += raiz.altura;
                 cadena += "\" -> ";
                 cadena += this.ValoresArbol(raiz.derecho, numero)
-                cadena += "{rank=same" + "\"" + raiz.izquierdo.valor + "\"" + " -> " + "\"" + raiz.derecho.valor + "\"" + " [style=invis]}; "
             } else if (!(raiz.izquierdo === null) && (raiz.derecho === null)) {
                 cadena += " x" + numero + " [label=\"\",width=.1,style=invis];"
                 cadena += "\"";
                 cadena += raiz.valor;
+                cadena += "\\n"
+                cadena += raiz.nombre
+                cadena += "\\nAltura: ";
+                cadena += raiz.altura;
                 cadena += "\" -> ";
                 cadena += this.ValoresArbol(raiz.izquierdo, numero)
                 cadena += "\"";
                 cadena += raiz.valor;
+                cadena += "\\n"
+                cadena += raiz.nombre
+                cadena += "\\nAltura: ";
+                cadena += raiz.altura;
                 cadena += "\" -> ";
                 cadena += "x" + numero + "[style=invis]";
                 cadena += "{rank=same" + "\"" + raiz.izquierdo.valor + "\"" + " -> " + "x" + numero + " [style=invis]}; "
@@ -184,10 +199,18 @@ class ArbolAVL {
                 cadena += " x" + numero + " [label=\"\",width=.1,style=invis];"
                 cadena += "\"";
                 cadena += raiz.valor;
+                cadena += "\\n"
+                cadena += raiz.nombre
+                cadena += "\\nAltura: ";
+                cadena += raiz.altura;
                 cadena += "\" -> ";
                 cadena += "x" + numero + "[style=invis]";
                 cadena += "; \"";
                 cadena += raiz.valor;
+                cadena += "\\n"
+                cadena += raiz.nombre
+                cadena += "\\nAltura: ";
+                cadena += raiz.altura;
                 cadena += "\" -> ";
                 cadena += this.ValoresArbol(raiz.derecho, numero)
                 cadena += "{rank=same" + " x" + numero + " -> \"" + raiz.derecho.valor + "\"" + " [style=invis]}; "
@@ -213,8 +236,6 @@ class ArbolAVL {
             cadena += "node [shape=circle];"
             cadena += this.ValoresArbol(this.raiz, 0)
             cadena += "}"
-        } else {
-            cadena = "No hay datos"
         }
         return cadena
     }
@@ -276,8 +297,8 @@ function onReaderLoad(event) {
     }
     console.log(localStorage);
     //console.log(JSON.parse(localStorage.getItem('carnet')));
-    refrescarTabla();
-    refrecarArbol();
+    //refrescarTabla();
+    //refrecarArbol();
 }
 
 function refrescarTabla() {
@@ -292,6 +313,14 @@ function refrecarArbol() {
     let url = 'https://quickchart.io/graphviz?graph=';
     let body = treeAvl.GraficarArbol();
     $("#image1").attr("src", url + body);
+    document.getElementById("carga").value = "";
+    console.log(url + body)
+}
+
+function refrescarArbolPostOrden() {
+    let url = 'https://quickchart.io/graphviz?graph=';
+    let body = "digraph G { graph[label = \"Post-Orden\" rankdir = LR labelloc = t]" + treeAvl.recorridoPostOrden(treeAvl.raiz) + "}";
+    $("#image3").attr("src", url + body);
     document.getElementById("carga").value = "";
     console.log(url + body)
 }

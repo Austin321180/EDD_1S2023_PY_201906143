@@ -31,6 +31,41 @@
         .green-container button {
             margin-bottom: 10px;
         }
+
+        .drag-area {
+            clear: both;
+            margin-left: 20px;
+            margin-bottom: 20px;
+            border: 5px dashed #ddd;
+            width: 200px;
+            height: 250px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .cerrar-container {
+            margin-right: 10px;
+            margin-left: 1100px;
+            margin-bottom: 20px;
+        }
+
+        .contenedor {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 50px;
+            gap: 20px;
+        }
+
+        #image1 {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
     </style>
 
 
@@ -38,13 +73,19 @@
 
 <body>
     <h1>Usuarios</h1>
+    <div class="container d-flex flex-column align-items-start cerrar-container">
+        <button onclick="logout()" class="btn btn-primary">Cerrar sesión</button>
+    </div>
     <div class="container d-flex flex-column align-items-start">
         <div class="input-group mb-3">
             <button class="btn btn-primary" type="button" id="button-addon1" onclick="agregarVarios()">Añadir</button>
-            <input type="text" id="ruta" class="form-control" placeholder="Ej. /Documentos/Prueba" aria-label="Example text with button addon" aria-describedby="button-addon1">
+            <input type="text" id="ruta" class="form-control" placeholder="Ej. /Documentos/Prueba"
+                aria-label="Example text with button addon" aria-describedby="button-addon1">
         </div>
         <div>
-            <input type="text" id="carpeta" class="form-control" placeholder="Ej. Imagenes" aria-label="Example text with button addon" aria-describedby="button-addon1">
+            <input type="text" id="carpeta" class="form-control" placeholder="Ej. Imagenes"
+                aria-label="Example text with button addon" aria-describedby="button-addon1">
+            <button class="btn btn-primary" type="button">Buscar</button>
         </div>
     </div>
 
@@ -52,11 +93,22 @@
         <div id="username"></div>
         <button type="button" class="btn btn-primary">Eliminar Carpeta</button>
     </div>
-    <div class="container d-flex flex-column align-items-start">
-        <button onclick="logout()" class="btn btn-primary">Cerrar sesión</button>
+    <div class="drag-area">
+        <h3>Arrastrar</h3>
+        <span>0</span>
+        <button>Subir archivos</button>
+        <input type="text" id="inputFile" hidden multiple>
     </div>
+    <div id="preview"></div>
+    <div class="contenedor">
+        <button type="button" class="btn btn-primary" onclick="refrescarArbol()">Reporte de Carpetas</button>
+        <button type="button" class="btn btn-primary" onclick="refrecarArchivos()">Reporte Archivos</button>
+        <button class="btn btn-primary" type="button">Bitacora</button>
+    </div>
+    <script src="main.js"></script>
     <div>
-        <img id="image">
+        <img id="image" style="position: relative; bottom: -50px; display: block; margin: 0 auto;">
+        <img id="image1" style="border: 1px solid gray;">
     </div>
     <script src="../EDD_Proyecto1_Fase2/EDD/ArbolMoN.js">
     </script>
