@@ -46,6 +46,14 @@
             flex-direction: column;
         }
 
+        input[type="file"] {
+            position: absolute;
+            width: 200px;
+            height: 250px;
+            opacity: 0;
+            cursor: pointer;
+        }
+
         .cerrar-container {
             margin-right: 10px;
             margin-left: 1100px;
@@ -66,6 +74,13 @@
             left: 50%;
             transform: translate(-50%, -50%);
         }
+
+        .drag-area p {
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            margin: 0;
+        }
     </style>
 
 
@@ -78,38 +93,39 @@
     </div>
     <div class="container d-flex flex-column align-items-start">
         <div class="input-group mb-3">
-            <button class="btn btn-primary" type="button" id="button-addon1" onclick="agregarVarios()">Añadir</button>
-            <input type="text" id="ruta" class="form-control" placeholder="Ej. /Documentos/Prueba"
+            <button class="btn btn-primary" type="button" id="button-addon1">Buscar</button>
+            <input type="text" id="ruta" class="form-control" placeholder="/Documentos/Prueba"
                 aria-label="Example text with button addon" aria-describedby="button-addon1">
         </div>
         <div>
-            <input type="text" id="carpeta" class="form-control" placeholder="Ej. Imagenes"
+            <input type="text" id="carpeta" class="form-control" placeholder="Documentos"
                 aria-label="Example text with button addon" aria-describedby="button-addon1">
-            <button class="btn btn-primary" type="button">Buscar</button>
         </div>
     </div>
 
     <div class="container d-flex flex-column align-items-start green-container">
         <div id="username"></div>
-        <button type="button" class="btn btn-primary">Eliminar Carpeta</button>
+        <button class="btn btn-primary" type="button" onclick="agregarVarios()">Añadir Carpeta</button>
+        <button type="button" class="btn btn-primary">Permisos</button>
+        <input type="text" id="permiso" class="form-control">
+        <button type="button" class="btn btn-primary" onclick="Eliminar()">Eliminar Carpeta</button>
     </div>
     <div class="drag-area">
-        <h3>Arrastrar</h3>
-        <span>0</span>
-        <button>Subir archivos</button>
-        <input type="text" id="inputFile" hidden multiple>
+        <input type="file" id="inputFile" accept=".txt,.pdf,.jpg,.png,.jpeg" multiple>
+        <p>Click aquí para subir archivos</p>
     </div>
     <div id="preview"></div>
     <div class="contenedor">
         <button type="button" class="btn btn-primary" onclick="refrescarArbol()">Reporte de Carpetas</button>
         <button type="button" class="btn btn-primary" onclick="refrecarArchivos()">Reporte Archivos</button>
-        <button class="btn btn-primary" type="button">Bitacora</button>
+        <button class="btn btn-primary" type="button" onclick="refrescarlistacircular()">Bitacora</button>
     </div>
-    <script src="main.js"></script>
     <div>
         <img id="image" style="position: relative; bottom: -50px; display: block; margin: 0 auto;">
         <img id="image1" style="border: 1px solid gray;">
+        <img id="image2">
     </div>
+    <script src="../EDD_Proyecto1_Fase2/EDD/ListaCircular.js"></script>
     <script src="../EDD_Proyecto1_Fase2/EDD/ArbolMoN.js">
     </script>
     <script>
@@ -120,7 +136,28 @@
             window.location.href = "../index.html";
         }
     </script>
+    <script>
+        const inputFile = document.getElementById("inputFile");
+        let fileList = [];
 
+        inputFile.addEventListener("change", function () {
+            const newFiles = Array.from(inputFile.files);
+
+            newFiles.forEach(function (file) {
+                let fileName = file.name;
+                let fileNumber = 1;
+
+                while (fileList.includes(fileName)) {
+                    const dotIndex = fileName.lastIndexOf(".");
+                    fileName = fileName.slice(0, dotIndex) + fileNumber + fileName.slice(dotIndex);
+                    fileNumber++;
+                }
+
+                fileList.push(fileName);
+                console.log("Nombre del archivo #" + fileList.length + ": " + "(" + fileName + ")");
+            });
+        });
+    </script>
 
 </body>
 

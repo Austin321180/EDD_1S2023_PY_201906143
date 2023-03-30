@@ -149,7 +149,7 @@ class MatrizDispersa {
     }
 
     reporte() {
-        let contenido = ""
+        let cadena = ""
         let aux1 = this.principal
         let aux2 = this.principal
         let aux3 = this.principal

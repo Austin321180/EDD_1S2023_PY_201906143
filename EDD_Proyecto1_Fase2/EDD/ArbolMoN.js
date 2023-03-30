@@ -4,6 +4,7 @@ class NodoArbolNario {
         this.valor = valor;
         this.primero = null;
         this.id = id;
+        this.hijos = [];
     }
 }
 
@@ -66,6 +67,7 @@ class ArbolNario {
 
         }
     }
+
     insertarOrdenado(raiz, nuevoNodo) {
         let piv = raiz.primero
         if (nuevoNodo.valor < raiz.primero.valor) {
@@ -90,6 +92,7 @@ class ArbolNario {
             return raiz
         }
     }
+
     insertarHijos(carpeta_nueva, lista_carpeta) {
         const nuevoNodo = new NodoArbolNario(carpeta_nueva, this.nodo_creados)
         this.nodo_creados++
@@ -125,14 +128,23 @@ class ArbolNario {
             } else {
                 aux = this.insertarOrdenado(aux, nuevoNodo)
             }
+            aux.hijos.push(nuevoNodo);
         }
     }
+
     insertarValor(ruta, carpeta_nueva) {
         let lista_carpeta = ruta.split('/')
         let existe_carpeta = this.BuscarCarpeta(carpeta_nueva, lista_carpeta)
         switch (existe_carpeta) {
             case 1:
-                alert("La carpeta ya existe")
+                let nombre_carpeta_copia = `${carpeta_nueva}_copia`
+                let i = 1
+                while (this.BuscarCarpeta(nombre_carpeta_copia, lista_carpeta) === 1) {
+                    nombre_carpeta_copia = `${carpeta_nueva}_copia${i}`
+                    i++
+                }
+                this.insertarHijos(nombre_carpeta_copia, lista_carpeta)
+                alert(`La carpeta ${carpeta_nueva} ya existe. Se ha creado una copia con el nombre ${nombre_carpeta_copia}.`)
                 break;
             case 2:
                 this.insertarHijos(carpeta_nueva, lista_carpeta)
@@ -159,6 +171,7 @@ class ArbolNario {
         }
         return cadena;
     }
+
     retornarValoresArbol(raiz) {
         var cadena = "node[shape=record] ";
         let nodo = 1;
@@ -219,6 +232,21 @@ class ArbolNario {
         return cadena
     }
 
+    obtenerFechaYHora() {
+        const fechaActual = new Date();
+        const dia = fechaActual.getDate();
+        const mes = fechaActual.getMonth() + 1;
+        const anio = fechaActual.getFullYear();
+        const hora = fechaActual.getHours();
+        const minutos = fechaActual.getMinutes();
+        const segundos = fechaActual.getSeconds();
+
+        return {
+            fecha: `${dia}/${mes}/${anio}`,
+            hora: `${hora}:${minutos}:${segundos}`
+        };
+    }
+
     conexionRamas(raiz, padre) {
         let cadena = ""
         let aux = raiz
@@ -237,18 +265,30 @@ class ArbolNario {
     }
 }
 const arbolnario = new ArbolNario()
+const listaCircular = new ListaCircular();
 function agregarVarios() {
     let ruta = document.getElementById("ruta").value
     let carpeta = document.getElementById("carpeta").value
     try {
         arbolnario.insertarValor(ruta, carpeta)
     } catch (error) {
-        alert("Hubo un error al insertar el nodo")
+        alert("Hubo un error al insertar la carpeta")
     }
     document.getElementById("carpeta").value = "";
     //refrescarArbol();
     //refrecarArchivos();
+    agregarCarpetaFechayHora()
+}
 
+function agregarCarpetaFechayHora() {
+    let carpeta = document.getElementById("carpeta").value
+    const fechaYHora = arbolnario.obtenerFechaYHora();
+    try {
+        listaCircular.AgregarValor(fechaYHora.fecha, fechaYHora.hora, " Se creo la carpeta: " + carpeta)
+    } catch (error) {
+        alert("Hubo un error al insertar la carpeta")
+    }
+    document.getElementById("carpeta").value = "";
 }
 
 function refrescarArbol() {
@@ -264,4 +304,15 @@ function refrecarArchivos() {
     $("#image1").attr("src", url + body);
     document.getElementById("carpeta").value = "";
     console.log(url + body)
+}
+
+function Eliminar() {
+    let ruta = document.getElementById("ruta").value
+    let carpeta = document.getElementById("carpeta").value
+    try {
+        arbolnario.eliminarCarpeta(ruta)
+    } catch (error) {
+        alert("Hubo un error al insertar la carpeta")
+    }
+    document.getElementById("carpeta").value = "";
 }

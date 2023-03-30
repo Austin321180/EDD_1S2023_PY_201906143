@@ -90,61 +90,84 @@ class ArbolAVL {
     RecorridoPreorden(raiz) {
         let cadena = ""
         if (raiz !== null) {
-            cadena = cadena + "\""
-            cadena = cadena + raiz.valor
-            cadena = cadena + "\""
+            cadena += "\"" + raiz.valor + "\\n" + raiz.nombre + "\\nAltura: " + raiz.altura + "\""
+            cadena += " "
             if (raiz.izquierdo !== null) {
-                cadena = cadena + " -> "
-                cadena = cadena + this.recorridoPreorden(raiz.izquierdo)
+                cadena += this.RecorridoPreorden(raiz.izquierdo)
+                cadena += " "
+                cadena += "\"" + raiz.valor + "\\n" + raiz.nombre + "\\nAltura: " + raiz.altura + "\""
+                cadena += " -> "
+                cadena += "\"" + raiz.izquierdo.valor + "\\n" + raiz.izquierdo.nombre + "\\nAltura: " + raiz.izquierdo.altura + "\""
+                cadena += "\n"
             }
             if (raiz.derecho !== null) {
-                cadena = cadena + " -> "
-                cadena = cadena + this.recorridoPreorden(raiz.derecho)
+                cadena += " -> "
+                cadena += "\"" + raiz.derecho.valor + "\\n" + raiz.derecho.nombre + "\\nAltura: " + raiz.derecho.altura + "\""
+                cadena += this.RecorridoPreorden(raiz.derecho)
+                cadena += "\n"
             }
         }
         return cadena
     }
 
+    GraficarRecorridoPreOrden() {
+        let cadena = ""
+        cadena += "digraph G { graph[label = \"Pre-Orden\"]"
+        cadena += "node [shape=circle];"
+        cadena += this.RecorridoPreorden(this.raiz)
+        cadena += "}";
+        return cadena
+    }
+    //In-Orden
     RecorridoInorden(raiz) {
-        let cadena = ""
+        let cadena = "";
         if (raiz !== null) {
-            if (raiz.izquierdo !== null) {
-                cadena += this.recorridoInorden(raiz.izquierdo)
-                cadena += " -> "
-            }
-            cadena += "\""
-            cadena += raiz.valor
-            cadena += "\""
-            if (raiz.derecho !== null) {
-                cadena += " -> "
-                cadena += this.recorridoInorden(raiz.derecho)
-            }
+            cadena += this.RecorridoInorden(raiz.izquierdo);
+            cadena += "<tr><td>" + raiz.valor + "</td><td>" + raiz.nombre + "</td></tr>";
+            cadena += this.RecorridoInorden(raiz.derecho);
+        }
+        return cadena;
+    }
+
+    GraficarRecorridoInOrden() {
+        let cadena = ""
+        if (this.raiz !== null) {
+            cadena += "digraph Tabla { graph[label = \"Tabla Alumnos (In-Orden)\"]"
+            cadena += "node [shape=plaintext];"
+            cadena += "TablaAlumnos[label=<<table border=\"1\" cellborder=\"1\" cellspacing=\"0\">"
+            cadena += "<tr><td colspan=\"2\" bgcolor=\"green\"><b>Alumnos</b></td></tr>"
+            cadena += "<tr><td bgcolor=\"green\"><b>Carnet</b></td><td bgcolor=\"green\"><b>Nombre</b></td></tr>"
+            cadena += this.RecorridoInorden(this.raiz)
+            cadena += "</table>>];"
+            cadena += "}"
         }
         return cadena
     }
-
+    //Post-Orden
     RecorridoPostOrden(raiz) {
-        let cadena = ""
+        let cadena = "";
         if (raiz !== null) {
-            if (raiz.izquierdo !== null) {
-                cadena += this.recorridoPostOrden(raiz.izquierdo)
-                cadena += " -> "
-            }
-            if (raiz.derecho !== null) {
-                cadena += this.recorridoPostOrden(raiz.derecho)
-                cadena += " -> "
-            }
-            cadena += "\""
-            cadena += raiz.valor
-            cadena += "\""
+            cadena += this.RecorridoPostOrden(raiz.izquierdo);
+            cadena += this.RecorridoPostOrden(raiz.derecho);
+            cadena += "<tr><td>" + raiz.valor + "</td><td>" + raiz.nombre + "</td></tr>";
         }
-        return cadena
+        return cadena;
     }
 
-    RecorridoArbol() {
-        console.log(this.recorridoInorden(this.raiz))
-        console.log(this.recorridoPreOrden(this.raiz))
-        console.log(this.recorridoPostOrden(this.raiz))
+
+    GraficarRecorridoPostOrden() {
+        let cadena = ""
+        if (this.raiz !== null) {
+            cadena += "digraph Tabla { graph[label = \"Tabla Alumnos (Post-Orden)\"]"
+            cadena += "node [shape=plaintext];"
+            cadena += "TablaAlumnos[label=<<table border=\"1\" cellborder=\"1\" cellspacing=\"0\">"
+            cadena += "<tr><td colspan=\"2\" bgcolor=\"green\"><b>Alumnos</b></td></tr>"
+            cadena += "<tr><td bgcolor=\"green\"><b>Carnet</b></td><td bgcolor=\"green\"><b>Nombre</b></td></tr>"
+            cadena += this.RecorridoPostOrden(this.raiz)
+            cadena += "</table>>];"
+            cadena += "}"
+        }
+        return cadena
     }
 
     ValoresArbol(raiz, id) {
@@ -219,6 +242,7 @@ class ArbolAVL {
         return cadena
     }
 
+    //pre-orden
     TablaArbol(raiz) {
         let cadena = "";
         if (raiz !== null) {
@@ -232,7 +256,7 @@ class ArbolAVL {
     GraficarArbol() {
         let cadena = ""
         if (this.raiz !== null) {
-            cadena += "digraph arbol {"
+            cadena += "digraph arbol {  graph[label = \"Árbol AVL Alumnos\"]"
             cadena += "node [shape=circle];"
             cadena += this.ValoresArbol(this.raiz, 0)
             cadena += "}"
@@ -243,7 +267,7 @@ class ArbolAVL {
     GraficarTabla() {
         let cadena = ""
         if (this.raiz !== null) {
-            cadena += "digraph Tabla {"
+            cadena += "digraph Tabla { graph[label = \"Tabla Alumnos (Pre-Orden)\"]"
             cadena += "node [shape=plaintext];"
             cadena += "TablaAlumnos[label=<<table border=\"1\" cellborder=\"1\" cellspacing=\"0\">"
             cadena += "<tr><td colspan=\"2\" bgcolor=\"green\"><b>Alumnos</b></td></tr>"
@@ -309,7 +333,7 @@ function refrescarTabla() {
     console.log(url + body)
 }
 
-function refrecarArbol() {
+function refrescarArbol() {
     let url = 'https://quickchart.io/graphviz?graph=';
     let body = treeAvl.GraficarArbol();
     $("#image1").attr("src", url + body);
@@ -319,8 +343,24 @@ function refrecarArbol() {
 
 function refrescarArbolPostOrden() {
     let url = 'https://quickchart.io/graphviz?graph=';
-    let body = "digraph G { graph[label = \"Post-Orden\" rankdir = LR labelloc = t]" + treeAvl.recorridoPostOrden(treeAvl.raiz) + "}";
-    $("#image3").attr("src", url + body);
+    let body = treeAvl.GraficarRecorridoPostOrden();
+    $("#image").attr("src", url + body);
+    document.getElementById("carga").value = "";
+    console.log(url + body)
+}
+
+function refrescarArbolPreOrden() {
+    let url = 'https://quickchart.io/graphviz?graph=';
+    let body = treeAvl.GraficarRecorridoPreOrden();
+    $("#image1").attr("src", url + body);
+    document.getElementById("carga").value = "";
+    console.log(url + body)
+}
+
+function refrescarArbolInOrden() {
+    let url = 'https://quickchart.io/graphviz?graph=';
+    let body = treeAvl.GraficarRecorridoInOrden();
+    $("#image").attr("src", url + body);
     document.getElementById("carga").value = "";
     console.log(url + body)
 }

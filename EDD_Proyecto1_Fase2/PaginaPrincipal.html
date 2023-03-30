@@ -26,13 +26,14 @@
         }
 
         #image1 {
-            width: 60%;
+            width: 50%;
             height: auto;
         }
 
 
         #image2,
-        #image3 {
+        #image3,
+        #image4 {
             width: 100%;
             margin-top: 10px;
         }
@@ -57,10 +58,9 @@
                 onclick="refrescarArbolPostOrden()">Post-Orden</button>
             <!--Pre-Orden-->
             <button class="btn btn-info" type="button" id="button-addon1"
-                onclick="agregarVariosNumeros()">Pre-Orden</button>
-            <!--In-Orden-->
-            <button class="btn btn-info" type="button" id="button-addon1" onclick="refrecarArbol()">Arbol</button>
-            <button type="button" onclick="refrescarTabla()" class="btn btn-info">Tabla</button>
+                onclick="refrescarTabla()">Pre-Orden</button>
+            <button class="btn btn-info" type="button" id="button-addon1" onclick="refrescarArbol()">Arbol</button>
+            <button type="button" onclick="refrescarArbolInOrden()" class="btn btn-info">Tabla</button>
         </div>
         <input type="file" id="carga">
         <div id="image-container">
@@ -71,6 +71,7 @@
             <div id="image2-container">
                 <img id="image2">
                 <img id="image3">
+                <img id="image4">
             </div>
         </div>
     </div>
