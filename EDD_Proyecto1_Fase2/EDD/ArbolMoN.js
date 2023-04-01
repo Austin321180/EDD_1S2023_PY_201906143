@@ -1,3 +1,4 @@
+import { MatrizDispersa } from './Matriz.js';
 class NodoArbolNario {
     constructor(valor, id) {
         this.siguiente = null;
@@ -8,10 +9,11 @@ class NodoArbolNario {
     }
 }
 
-class ArbolNario {
+export class ArbolNario {
     constructor() {
         this.raiz = new NodoArbolNario("/", 0)
         this.nodo_creados = 1
+        this.mD = new MatrizDispersa()
     }
 
     BuscarCarpeta(carpeta_nueva, lista_carpeta) {
@@ -232,21 +234,6 @@ class ArbolNario {
         return cadena
     }
 
-    obtenerFechaYHora() {
-        const fechaActual = new Date();
-        const dia = fechaActual.getDate();
-        const mes = fechaActual.getMonth() + 1;
-        const anio = fechaActual.getFullYear();
-        const hora = fechaActual.getHours();
-        const minutos = fechaActual.getMinutes();
-        const segundos = fechaActual.getSeconds();
-
-        return {
-            fecha: `${dia}/${mes}/${anio}`,
-            hora: `${hora}:${minutos}:${segundos}`
-        };
-    }
-
     conexionRamas(raiz, padre) {
         let cadena = ""
         let aux = raiz
@@ -263,56 +250,71 @@ class ArbolNario {
         }
         return cadena
     }
-}
-const arbolnario = new ArbolNario()
-const listaCircular = new ListaCircular();
-function agregarVarios() {
-    let ruta = document.getElementById("ruta").value
-    let carpeta = document.getElementById("carpeta").value
-    try {
-        arbolnario.insertarValor(ruta, carpeta)
-    } catch (error) {
-        alert("Hubo un error al insertar la carpeta")
+
+    obtenerFechaYHora() {
+        const fechaActual = new Date();
+        const dia = fechaActual.getDate().toString().padStart(2, '0');
+        const mes = (fechaActual.getMonth() + 1).toString().padStart(2, '0');
+        const anio = fechaActual.getFullYear();
+        const hora = fechaActual.getHours().toString().padStart(2, '0');
+        const minutos = fechaActual.getMinutes().toString().padStart(2, '0');
+        const segundos = fechaActual.getSeconds().toString().padStart(2, '0');
+
+        return {
+            fecha: `${dia}/${mes}/${anio}`,
+            hora: `${hora}:${minutos}:${segundos}`
+        };
     }
-    document.getElementById("carpeta").value = "";
-    //refrescarArbol();
-    //refrecarArchivos();
-    agregarCarpetaFechayHora()
-}
 
-function agregarCarpetaFechayHora() {
-    let carpeta = document.getElementById("carpeta").value
-    const fechaYHora = arbolnario.obtenerFechaYHora();
-    try {
-        listaCircular.AgregarValor(fechaYHora.fecha, fechaYHora.hora, " Se creo la carpeta: " + carpeta)
-    } catch (error) {
-        alert("Hubo un error al insertar la carpeta")
+    Buscrcarpeta2(lista_carpeta) {
+        if (lista_carpeta[1] === "" && this.raiz.primero !== null) {
+            return this.raiz
+        } else if (lista_carpeta[1] === "" && this.raiz.primero === null) {
+            return null
+        } else if (lista_carpeta[1] !== "" && this.raiz.primero === null) {
+            return null
+        } else if (lista_carpeta[1] !== "" && this.raiz.primero !== null) {
+            let actual = this.raiz.primero
+            let nivel = lista_carpeta.length
+            let posicion = 1
+            for (var i = 1; i < nivel; i++) {
+                if (actual !== null) {
+                    while (actual) {
+                        if (posicion < lista_carpeta.length && lista_carpeta[posicion] === actual.valor) {
+                            posicion++
+                            if (actual.primero !== null && posicion < lista_carpeta.length) {
+                                actual = actual.siguiente
+                            }
+                            break
+                        } else {
+                            actual = actual.siguiente
+                        }
+                    }
+                } else {
+                    break
+                }
+            }
+            if (actual !== null) {
+                return actual
+            } else {
+                return null
+            }
+        }
     }
-    document.getElementById("carpeta").value = "";
-}
 
-function refrescarArbol() {
-    let url = 'https://quickchart.io/graphviz?graph=';
-    let body = arbolnario.grafica_arbol();
-    $("#image").attr("src", url + body);
-    document.getElementById("carpeta").value = "";
-}
-
-function refrecarArchivos() {
-    let url = 'https://quickchart.io/graphviz?graph=';
-    let body = arbolnario.GraficarArchivos();
-    $("#image1").attr("src", url + body);
-    document.getElementById("carpeta").value = "";
-    console.log(url + body)
-}
-
-function Eliminar() {
-    let ruta = document.getElementById("ruta").value
-    let carpeta = document.getElementById("carpeta").value
-    try {
-        arbolnario.eliminarCarpeta(ruta)
-    } catch (error) {
-        alert("Hubo un error al insertar la carpeta")
+    mostrarCarpeta(ruta) {
+        let lista_carpeta = ruta.split('/')
+        let existe = this.Buscrcarpeta2(lista_carpeta)
+        try {
+            if (existe !== null) {
+                let actual = existe.primero
+                while (actual) {
+                    console.log(actual.valor)
+                    actual = actual.siguiente
+                }
+            }
+        } catch (error) {
+            console.log("ocurrio un error")
+        }
     }
-    document.getElementById("carpeta").value = "";
 }

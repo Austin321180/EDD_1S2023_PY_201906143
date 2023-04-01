@@ -1,3 +1,5 @@
+import { ListaCircular } from './ListaCircular.js';
+import { ArbolNario } from './ArbolMoN.js';
 class NodoArbolAVL {
     constructor(nombre, valor, password, carpetaRaiz) {
         this.izquierdo = null
@@ -11,9 +13,11 @@ class NodoArbolAVL {
     }
 }
 
-class ArbolAVL {
+export class ArbolAVL {
     constructor() {
         this.raiz = null
+        this.arbol_nario = new ArbolNario()
+        this.lcirc = new ListaCircular()
     }
 
     Altura(raiz) {
@@ -217,7 +221,6 @@ class ArbolAVL {
                 cadena += raiz.altura;
                 cadena += "\" -> ";
                 cadena += "x" + numero + "[style=invis]";
-                cadena += "{rank=same" + "\"" + raiz.izquierdo.valor + "\"" + " -> " + "x" + numero + " [style=invis]}; "
             } else if ((raiz.izquierdo === null) && !(raiz.derecho === null)) {
                 cadena += " x" + numero + " [label=\"\",width=.1,style=invis];"
                 cadena += "\"";
@@ -236,7 +239,6 @@ class ArbolAVL {
                 cadena += raiz.altura;
                 cadena += "\" -> ";
                 cadena += this.ValoresArbol(raiz.derecho, numero)
-                cadena += "{rank=same" + " x" + numero + " -> \"" + raiz.derecho.valor + "\"" + " [style=invis]}; "
             }
         }
         return cadena
@@ -296,71 +298,19 @@ class ArbolAVL {
         this.raiz = null
     }
 
+    BuscarCarnet(carnet) {
+        let actual = this.raiz
+        while (actual) {
+            if (actual.valor === carnet) {
+                return true
+            }
+            if (carnet < actual.valor) {
+                actual = actual.izquierdo
+            } else {
+                actual = actual.derecho
+            }
 
-
-}
-
-const treeAvl = new ArbolAVL();
-const inputElement = document.getElementById("carga");
-inputElement.addEventListener("change", onChange, false);
-function onChange() {
-    var reader = new FileReader();
-    reader.onload = onReaderLoad;
-    reader.readAsText(event.target.files[0]);
-}
-
-function onReaderLoad(event) {
-    var obj = JSON.parse(event.target.result);
-    for (var i = 0; i < obj.alumnos.length; i++) {
-        treeAvl.InsertarDatos(obj.alumnos[i].nombre, obj.alumnos[i].carnet, obj.alumnos[i].password, obj.alumnos[i].Carpeta_Raiz)
-        localStorage.setItem(obj.alumnos[i].carnet, JSON.stringify({
-            nombre: obj.alumnos[i].nombre,
-            password: obj.alumnos[i].password,
-            Carpeta_Raiz: obj.alumnos[i].Carpeta_Raiz
-        }));
+        }
+        return false
     }
-    console.log(localStorage);
-    //console.log(JSON.parse(localStorage.getItem('carnet')));
-    //refrescarTabla();
-    //refrecarArbol();
-}
-
-function refrescarTabla() {
-    let url = 'https://quickchart.io/graphviz?graph=';
-    let body = treeAvl.GraficarTabla();
-    $("#image").attr("src", url + body);
-    document.getElementById("carga").value = "";
-    console.log(url + body)
-}
-
-function refrescarArbol() {
-    let url = 'https://quickchart.io/graphviz?graph=';
-    let body = treeAvl.GraficarArbol();
-    $("#image1").attr("src", url + body);
-    document.getElementById("carga").value = "";
-    console.log(url + body)
-}
-
-function refrescarArbolPostOrden() {
-    let url = 'https://quickchart.io/graphviz?graph=';
-    let body = treeAvl.GraficarRecorridoPostOrden();
-    $("#image").attr("src", url + body);
-    document.getElementById("carga").value = "";
-    console.log(url + body)
-}
-
-function refrescarArbolPreOrden() {
-    let url = 'https://quickchart.io/graphviz?graph=';
-    let body = treeAvl.GraficarRecorridoPreOrden();
-    $("#image1").attr("src", url + body);
-    document.getElementById("carga").value = "";
-    console.log(url + body)
-}
-
-function refrescarArbolInOrden() {
-    let url = 'https://quickchart.io/graphviz?graph=';
-    let body = treeAvl.GraficarRecorridoInOrden();
-    $("#image").attr("src", url + body);
-    document.getElementById("carga").value = "";
-    console.log(url + body)
 }

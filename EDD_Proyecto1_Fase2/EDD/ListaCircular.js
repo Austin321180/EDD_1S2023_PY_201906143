@@ -7,7 +7,7 @@ class NodoListaCircular {
     }
 }
 
-class ListaCircular {
+export class ListaCircular {
     constructor() {
         this.inicio = null
         this.final = null
@@ -113,14 +113,4 @@ class ListaCircular {
         cadena += "}"
         return cadena
     }
-}
-
-const Lcircular = new ListaCircular()
-
-function refrescarlistacircular() {
-    let url = 'https://quickchart.io/graphviz?graph=';
-    let body = Lcircular.graficarlista();
-    $("#image2").attr("src", url + body);
-    //document.getElementById("carpeta").value = "";
-    console.log(url + body)
 }

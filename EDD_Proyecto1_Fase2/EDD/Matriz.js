@@ -1,24 +1,41 @@
+const inputElement = document.getElementById("inputFile");
+inputElement.addEventListener("change", onChange, false);
+let nombreArchivo = ""
+let base64String = ""
+function onChange(event) {
+    var reader = new FileReader();
+    reader.onload = onReaderLoad;
+    nombreArchivo = event.target.files[0].name
+    reader.readAsDataURL(event.target.files[0]);
+}
+
+function onReaderLoad(event) {
+    base64String = event.target.result
+}
+
 class NodoMatriz {
-    constructor(Posx, Posy, pos) {
+    constructor(Posx, Posy, nombre) {
         this.siguiente = null;
         this.anterior = null;
         this.abajo = null;
         this.arriba = null;
         this.Posx = Posx;
         this.Posy = Posy;
-        this.pos = pos;
+        this.posicion = nombre;
     }
 }
 
-class MatrizDispersa {
+export class MatrizDispersa {
     constructor() {
         this.principal = new NodoMatriz(-1, -1, "Raiz")
+        this.coordenadasY = 0
+        this.coordenadasX = 0
     }
 
-    BuscarFila(y) {
-        let auz = this.principal
+    BuscarFila(nombre) {
+        let aux = this.principal
         while (aux) {
-            if (ux.Posy === y) {
+            if (aux.posicion === nombre) {
                 return aux
             } else {
                 aux = aux.abajo
@@ -27,10 +44,10 @@ class MatrizDispersa {
         return null
     }
 
-    BuscarColumna(x) {
+    BuscarColumna(carnet) {
         let aux = this.principal
         while (aux) {
-            if (aux.Posx === x) {
+            if (aux.posicion === carnet) {
                 return aux
             } else {
                 aux = aux.siguiente
@@ -112,7 +129,7 @@ class MatrizDispersa {
             }
             temporaly = temporaly.abajo
         }
-        while (ture) {
+        while (true) {
             if (temporaly.Posx === nuevoN.Posx) {
                 break
             } else if (temporaly.siguiente !== null && temporaly.siguiente.Posx > nuevoN.Posx) {
@@ -148,6 +165,30 @@ class MatrizDispersa {
         }
     }
 
+    InsertarArchivo(texto, numero) {
+        let nuevafila = this.BuscarFila(texto)
+        if (nuevafila === null) {
+            this.InsertarFila(this.coordenadasY, texto)
+            this.coordenadasY++
+        } else {
+            let copia = nombreArchivo + "(" + (numero++) + ")"
+            this.InsertarArchivo(copia, numero)
+        }
+    }
+
+    Permisos(archivo, carnet, permisos) {
+        let nuevaColumna = this.BuscarColumna(carnet)
+        let nuevafila = this.BuscarFila(archivo)
+        if (nuevaColumna === null) {
+            this.InsertarColumna(this.coordenadasX, carnet)
+            this.coordenadasX++
+            nuevaColumna = this.BuscarColumna(carnet)
+        }
+        if (nuevaColumna !== null && nuevafila !== null) {
+            this.InsertarNodo(nuevaColumna.Posx, nuevafila.Posy, permisos)
+        }
+    }
+
     reporte() {
         let cadena = ""
         let aux1 = this.principal
@@ -157,7 +198,7 @@ class MatrizDispersa {
             cadena = "digraph MatrizCapa{ \n node[shape=box] \n rankdir=UD; \n {rank=min; \n";
             /** Creacion de los nodos actuales */
             while (aux1) {
-                cadena += "nodo" + (aux1.posX + 1) + (aux1.posY + 1) + "[label=\"" + aux1.posicion + "\" ,rankdir=LR,group=" + (aux1.posX + 1) + "]; \n";
+                cadena += "nodo" + (aux1.Posx + 1) + (aux1.Posy + 1) + "[label=\"" + aux1.posicion + "\" ,rankdir=LR,group=" + (aux1.Posx + 1) + "]; \n";
                 aux1 = aux1.siguiente;
             }
             cadena += "}"
@@ -165,7 +206,7 @@ class MatrizDispersa {
                 aux1 = aux2;
                 cadena += "{rank=same; \n";
                 while (aux1) {
-                    cadena += "nodo" + (aux1.posX + 1) + (aux1.posY + 1) + "[label=\"" + aux1.posicion + "\" ,group=" + (aux1.posX + 1) + "]; \n";
+                    cadena += "nodo" + (aux1.Posx + 1) + (aux1.Posy + 1) + "[label=\"" + aux1.posicion + "\" ,group=" + (aux1.Posx + 1) + "]; \n";
                     aux1 = aux1.siguiente;
                 }
                 cadena += "}";
@@ -176,7 +217,7 @@ class MatrizDispersa {
             while (aux2) {
                 aux1 = aux2;
                 while (aux1.siguiente) {
-                    cadena += "nodo" + (aux1.posX + 1) + (aux1.posY + 1) + " -> " + "nodo" + (aux1.siguiente.posX + 1) + (aux1.siguiente.posY + 1) + " [dir=both];\n"
+                    cadena += "nodo" + (aux1.Posx + 1) + (aux1.Posy + 1) + " -> " + "nodo" + (aux1.siguiente.Posx + 1) + (aux1.siguiente.Posy + 1) + " [dir=both];\n"
                     aux1 = aux1.siguiente
                 }
                 aux2 = aux2.abajo;
@@ -185,7 +226,7 @@ class MatrizDispersa {
             while (aux2) {
                 aux1 = aux2;
                 while (aux1.abajo) {
-                    cadena += "nodo" + (aux1.posX + 1) + (aux1.posY + 1) + " -> " + "nodo" + (aux1.abajo.posX + 1) + (aux1.abajo.posY + 1) + " [dir=both];\n"
+                    cadena += "nodo" + (aux1.Posx + 1) + (aux1.Posy + 1) + " -> " + "nodo" + (aux1.abajo.Posx + 1) + (aux1.abajo.Posy + 1) + " [dir=both];\n"
                     aux1 = aux1.abajo
                 }
                 aux2 = aux2.siguiente;
@@ -197,3 +238,4 @@ class MatrizDispersa {
         return cadena;
     }
 }
+
