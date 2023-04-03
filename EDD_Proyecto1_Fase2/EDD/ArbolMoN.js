@@ -184,19 +184,49 @@ export class ArbolNario {
         console.log(cadena)
         return cadena;
     }
+
     valoresSiguietes(raiz, nodo, nodo_padre) {
         let cadena = ""
         let aux = raiz
         let nodo_padre_aumento = nodo_padre
         if (aux !== null) {
             while (aux) {
-                cadena += "nodo" + aux.id + "[label=\"" + aux.valor + "\"] "
-                aux = aux.siguiente
+                const excludedExtensions = ['txt', 'pdf', 'jpg', 'png', 'jpeg'];
+                const extension = aux.valor.split('.').pop();
+                if (excludedExtensions.includes(extension)) {
+                    aux = aux.siguiente;
+                    continue;
+                }
+                cadena += "nodo" + aux.id + "[label=\"" + aux.valor + "\"] ";
+                aux = aux.siguiente;
             }
             aux = raiz
             while (aux) {
                 nodo_padre_aumento++
                 cadena += this.valoresSiguietes(aux.primero, this.nodo_creados, nodo_padre_aumento)
+                aux = aux.siguiente
+            }
+        }
+        return cadena
+    }
+
+    conexionRamas(raiz, padre) {
+        let cadena = ""
+        let aux = raiz
+        if (aux !== null) {
+            while (aux) {
+                const excludedExtensions = ['txt', 'pdf', 'jpg', 'png', 'jpeg'];
+                const extension = aux.valor.split('.').pop();
+                if (excludedExtensions.includes(extension)) {
+                    aux = aux.siguiente;
+                    continue;
+                }
+                cadena += "nodo" + padre + " -> nodo" + aux.id + " "
+                aux = aux.siguiente
+            }
+            aux = raiz
+            while (aux) {
+                cadena += this.conexionRamas(aux.primero, aux.id)
                 aux = aux.siguiente
             }
         }
@@ -230,23 +260,6 @@ export class ArbolNario {
             cadena += "</TR>"
             cadena += "</TABLE>>]"
             cadena += "}"
-        }
-        return cadena
-    }
-
-    conexionRamas(raiz, padre) {
-        let cadena = ""
-        let aux = raiz
-        if (aux !== null) {
-            while (aux) {
-                cadena += "nodo" + padre + " -> nodo" + aux.id + " "
-                aux = aux.siguiente
-            }
-            aux = raiz
-            while (aux) {
-                cadena += this.conexionRamas(aux.primero, aux.id)
-                aux = aux.siguiente
-            }
         }
         return cadena
     }

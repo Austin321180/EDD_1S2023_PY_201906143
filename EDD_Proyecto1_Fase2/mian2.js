@@ -87,6 +87,7 @@ btnbuscar.addEventListener('click', mostrarcarpetas)
 const inputElement = document.getElementById("inputFile");
 inputElement.addEventListener("change", onChange, false);
 function onChange(event) {
+    let ruta = document.getElementById("ruta").value
     for (let i = 0; i < event.target.files.length; i++) {
         const file = event.target.files[i];
         const reader = new FileReader();
@@ -94,6 +95,7 @@ function onChange(event) {
             const nombreArchivo = file.name;
             const base64String = e.target.result;
             cargarArchivo(nombreArchivo, base64String);
+            arbol_avl.arbol_nario.insertarValor(ruta, nombreArchivo)
         };
         reader.readAsDataURL(file);
     }
@@ -112,18 +114,19 @@ function AsignarPermisos() {
     //console.log(alumno.Carpeta_Raiz);
     if (alumno) {
         arbol_avl.arbol_nario.mD.Permisos(arreglo[0], arreglo[1], arreglo[2])
-        reporteMatriz();
         console.log(`El alumno ${alumno.nombre} existe`);
         const fechaYHora = arbol_avl.arbol_nario.obtenerFechaYHora();
         try {
             console.log(fechaYHora.fecha, fechaYHora.hora, " Se creo la carpeta: " + arreglo[0])
             arbol_avl.lcirc.AgregarValor(fechaYHora.fecha, fechaYHora.hora, " Se Agrego: " + arreglo[0])
+            reporteMatriz();
         } catch (error) {
-            alert("Hubo un error al insertar la carpeta")
+            alert("Hubo un error ")
         }
     } else {
         alert(`El carnet no existe`);
     }
+    reporteMatriz()
 
 }
 btnpermisos.addEventListener('click', AsignarPermisos)
