@@ -3,6 +3,7 @@
 ## Admin
 
 Al momento de entrar a nuestro link de github-pages, aparecera un login:
+![inicio](https://github.com/Austin321180/EDD_1S2023_PY_201906143/blob/gh-pages/EDD_Proyecto1_Fase2/Imagenes/Captura%20de%20pantalla%202023-04-10%20152033.png)
 
 y luego entraremos con el usuario "admin" y contraseña "admin" y nos mandara a la pagina principal del administrador:
 
