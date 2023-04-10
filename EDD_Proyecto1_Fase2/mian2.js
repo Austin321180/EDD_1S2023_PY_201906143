@@ -54,8 +54,11 @@ function refrecarArchivos() {
 
 function Eliminar() {
     let ruta = document.getElementById("ruta").value
+    const fechaYHora = arbol_avl.arbol_nario.obtenerFechaYHora();
     try {
         arbol_avl.arbol_nario.eliminarCarpeta(ruta)
+        console.log(fechaYHora.fecha, fechaYHora.hora, " Se creo la carpeta: " + ruta)
+        arbol_avl.lcirc.AgregarValor(fechaYHora.fecha, fechaYHora.hora, " Se Elimino: " + ruta)
     } catch (error) {
         alert("Hubo un error al eliminar la carpeta")
     }

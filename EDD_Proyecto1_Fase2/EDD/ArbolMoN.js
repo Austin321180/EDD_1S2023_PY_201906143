@@ -333,26 +333,29 @@ export class ArbolNario {
         return cadena
     }
 
-    eliminarCarpetaRecursiva(actual) {
+    eliminarCarpetaRecursiva(actual, nombreCarpetaAEliminar) {
         if (actual.primero) {
-            this.eliminarCarpetaRecursiva(actual.primero);
+            this.eliminarCarpetaRecursiva(actual.primero, nombreCarpetaAEliminar);
         }
         if (actual.siguiente) {
-            this.eliminarCarpetaRecursiva(actual.siguiente);
+            this.eliminarCarpetaRecursiva(actual.siguiente, nombreCarpetaAEliminar);
         }
-        actual = null;
+        if (actual.nombre === nombreCarpetaAEliminar) { // verifica si la carpeta actual es la carpeta a eliminar
+            actual = null; // elimina la carpeta actual
+        }
     }
 
     eliminarCarpeta(ruta) {
-        if (ruta === '/') { // si la ruta es la carpeta raíz
-            this.eliminarCarpetaRecursiva(this.raiz.primero); // elimina todo el contenido de la carpeta raíz
+        if (ruta === '/') {
+            this.eliminarCarpetaRecursiva(this.raiz.primero);
             this.raiz.primero = null;
-            return; // termina la función
+            return;
         }
         let lista_carpeta = ruta.split('/');
+        let nombre_carpeta = lista_carpeta.pop();
         let carpeta = this.buscaCarpetaRecursiva(this.raiz.primero, 1, lista_carpeta);
         if (carpeta && carpeta.primero) {
-            this.eliminarCarpetaRecursiva(carpeta.primero);
+            this.eliminarCarpetaRecursiva(carpeta.primero, nombre_carpeta);
         }
         carpeta.primero = null;
         carpeta = null;
