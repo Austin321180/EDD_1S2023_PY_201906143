@@ -211,7 +211,6 @@ export class MatrizDispersa {
                 cadena += "}";
                 aux2 = aux2.abajo;
             }
-            /** Conexiones entre los nodos de la matriz */
             aux2 = aux3;
             while (aux2) {
                 aux1 = aux2;

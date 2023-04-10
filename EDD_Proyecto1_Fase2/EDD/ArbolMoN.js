@@ -309,6 +309,10 @@ export class ArbolNario {
     mostrarCarpeta(ruta) {
         let cadena = ""
         let lista_carpeta = ruta.split('/')
+        if (this.Buscrcarpeta2(lista_carpeta) === null) {
+            alert("La ruta no existe");
+            return;
+        }
         let existe = this.Buscrcarpeta2(lista_carpeta)
         cadena += "digraph G{"
         try {
@@ -340,8 +344,8 @@ export class ArbolNario {
         if (actual.siguiente) {
             this.eliminarCarpetaRecursiva(actual.siguiente, nombreCarpetaAEliminar);
         }
-        if (actual.nombre === nombreCarpetaAEliminar) { // verifica si la carpeta actual es la carpeta a eliminar
-            actual = null; // elimina la carpeta actual
+        if (actual.nombre === nombreCarpetaAEliminar) {
+            actual = null;
         }
     }
 

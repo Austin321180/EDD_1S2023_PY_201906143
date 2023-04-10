@@ -83,6 +83,9 @@ export class ListaCircular {
     }
 
     graficarlista() {
+        if (this.tamaño === 0) {
+            return "";
+        }
         let cadena = "digraph LinkedList {"
         cadena += "rankdir=TB;"
         cadena += "node [shape=box, style=filled, fillcolor=palegreen];"
