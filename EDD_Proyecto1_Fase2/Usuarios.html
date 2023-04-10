@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #ADD8E6;
+            background-color: #D1EAF2;
         }
 
         .green-container {
@@ -32,6 +32,12 @@
 
         .green-container button {
             margin-bottom: 10px;
+        }
+
+        .green-container input[type="text"] {
+            width: 80%;
+            margin: 0 auto;
+            display: block;
         }
 
         .drag-area {
@@ -93,6 +99,25 @@
             text-align: center;
             margin: 0;
         }
+
+        .btnbuscar,
+        .btnacarpeta,
+        .btnpermisos,
+        .btneliminar,
+        .btnarbolnario,
+        .btnarchivos,
+        .btnbitacora {
+            background-color: #ADD8E6;
+            color: rgb(0, 0, 0);
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+        }
+
+        .btnactive {
+            background-color: #87CEFA;
+        }
     </style>
 
 
@@ -118,9 +143,10 @@
     <div class="container d-flex flex-column align-items-start green-container">
         <div id="username"></div>
         <button class="btnacarpeta" type="button">Añadir Carpeta</button>
+        <button type="button" class="btneliminar">Eliminar Carpeta</button>
         <button type="button" class="btnpermisos">Permisos</button>
         <input type="text" id="permiso" class="form-control" placeholder="archivo-carnet-permiso">
-        <button type="button" class="btn btn-primary" onclick="Eliminar()">Eliminar Carpeta</button>
+
     </div>
     <div class="drag-area">
         <input type="file" id="inputFile" accept=".txt,.pdf,.jpg,.png,.jpeg" multiple>

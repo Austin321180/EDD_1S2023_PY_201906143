@@ -191,7 +191,7 @@ export class ArbolNario {
         let nodo_padre_aumento = nodo_padre
         if (aux !== null) {
             while (aux) {
-                const excludedExtensions = ['txt', 'pdf', 'jpg', 'png', 'jpeg'];
+                const excludedExtensions = ['txt', 'pdf', 'jpg', 'png', 'jpeg', 'txt_copia', 'pdf_copia', 'jpg_copia', 'png_copia', 'jpeg_copia', 'txt_copia1', 'pdf_copia1', 'jpg_copia1', 'png_copia1', 'jpeg_copia1'];
                 const extension = aux.valor.split('.').pop();
                 if (excludedExtensions.includes(extension)) {
                     aux = aux.siguiente;
@@ -215,7 +215,7 @@ export class ArbolNario {
         let aux = raiz
         if (aux !== null) {
             while (aux) {
-                const excludedExtensions = ['txt', 'pdf', 'jpg', 'png', 'jpeg'];
+                const excludedExtensions = ['txt', 'pdf', 'jpg', 'png', 'jpeg', 'txt_copia', 'pdf_copia', 'jpg_copia', 'png_copia', 'jpeg_copia', 'txt_copia1', 'pdf_copia1', 'jpg_copia1', 'png_copia1', 'jpeg_copia1'];
                 const extension = aux.valor.split('.').pop();
                 if (excludedExtensions.includes(extension)) {
                     aux = aux.siguiente;
@@ -279,49 +279,49 @@ export class ArbolNario {
         };
     }
 
-    Buscrcarpeta2(lista_carpeta) {
-        if (lista_carpeta[1] === "" && this.raiz.primero !== null) {
-            return this.raiz
-        } else if (lista_carpeta[1] === "" && this.raiz.primero === null) {
-            return null
-        } else if (lista_carpeta[1] !== "" && this.raiz.primero === null) {
-            return null
-        } else if (lista_carpeta[1] !== "" && this.raiz.primero !== null) {
-            let actual = this.raiz.primero
-            let nivel = lista_carpeta.length
-            let posicion = 1
-            for (var i = 1; i < nivel; i++) {
-                if (actual !== null) {
-                    while (actual) {
-                        if (posicion < lista_carpeta.length && lista_carpeta[posicion] === actual.valor) {
-                            posicion++
-                            if (actual.primero !== null && posicion < lista_carpeta.length) {
-                                actual = actual.siguiente
-                            }
-                            break
-                        } else {
-                            actual = actual.siguiente
-                        }
-                    }
-                } else {
-                    break
-                }
+    buscaCarpetaRecursiva(actual, nivelActual, listaCarpeta) {
+        if (actual.valor === listaCarpeta[nivelActual]) {
+            if (nivelActual === listaCarpeta.length - 1) {
+                return actual;
+            } else if (actual.primero !== null) {
+                return this.buscaCarpetaRecursiva(actual.primero, nivelActual + 1, listaCarpeta);
             }
-            if (actual !== null) {
-                return actual
-            } else {
-                return null
-            }
+        }
+        if (actual.siguiente !== null) {
+            return this.buscaCarpetaRecursiva(actual.siguiente, nivelActual, listaCarpeta);
+        }
+        return null;
+    }
+
+    Buscrcarpeta2(listaCarpeta) {
+        if (listaCarpeta[1] === "" && this.raiz.primero !== null) {
+            return this.raiz;
+        } else if (listaCarpeta[1] === "" && this.raiz.primero === null) {
+            return null;
+        } else if (listaCarpeta[1] !== "" && this.raiz.primero === null) {
+            return null;
+        } else if (listaCarpeta[1] !== "" && this.raiz.primero !== null) {
+            return this.buscaCarpetaRecursiva(this.raiz.primero, 1, listaCarpeta);
         }
     }
 
+
     mostrarCarpeta(ruta) {
+        let cadena = ""
         let lista_carpeta = ruta.split('/')
         let existe = this.Buscrcarpeta2(lista_carpeta)
+        cadena += "digraph G{"
         try {
             if (existe !== null) {
                 let actual = existe.primero
                 while (actual) {
+                    const excludedExtensions = ['txt', 'pdf', 'jpg', 'png', 'jpeg', 'txt_copia', 'pdf_copia', 'jpg_copia', 'png_copia', 'jpeg_copia', 'txt_copia1', 'pdf_copia1', 'jpg_copia1', 'png_copia1', 'jpeg_copia1'];
+                    const extension = actual.valor.split('.').pop();
+                    if (excludedExtensions.includes(extension)) {
+                        cadena += `"${actual.valor}" [shape=note];`;
+                    } else {
+                        cadena += `"${actual.valor}" [shape=folder];`;
+                    }
                     console.log(actual.valor)
                     actual = actual.siguiente
                 }
@@ -329,5 +329,33 @@ export class ArbolNario {
         } catch (error) {
             console.log("ocurrio un error")
         }
+        cadena += '}';
+        return cadena
     }
+
+    eliminarCarpetaRecursiva(actual) {
+        if (actual.primero) {
+            this.eliminarCarpetaRecursiva(actual.primero);
+        }
+        if (actual.siguiente) {
+            this.eliminarCarpetaRecursiva(actual.siguiente);
+        }
+        actual = null;
+    }
+
+    eliminarCarpeta(ruta) {
+        if (ruta === '/') { // si la ruta es la carpeta raíz
+            this.eliminarCarpetaRecursiva(this.raiz.primero); // elimina todo el contenido de la carpeta raíz
+            this.raiz.primero = null;
+            return; // termina la función
+        }
+        let lista_carpeta = ruta.split('/');
+        let carpeta = this.buscaCarpetaRecursiva(this.raiz.primero, 1, lista_carpeta);
+        if (carpeta && carpeta.primero) {
+            this.eliminarCarpetaRecursiva(carpeta.primero);
+        }
+        carpeta.primero = null;
+        carpeta = null;
+    }
+
 }

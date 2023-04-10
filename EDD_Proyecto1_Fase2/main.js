@@ -36,7 +36,7 @@ function onReaderLoad(event) {
 
 function refrescarTabla() {
     let url = 'https://quickchart.io/graphviz?graph=';
-    let body = arbol_avl.GraficarTabla();
+    let body = encodeURIComponent(arbol_avl.GraficarTabla());
     $("#image").attr("src", url + body);
     document.getElementById("carga").value = "";
     console.log(url + body)
@@ -55,7 +55,7 @@ btnArbol.addEventListener('click',refrescarArbol)
 
 function refrescarArbolPostOrden() {
     let url = 'https://quickchart.io/graphviz?graph=';
-    let body = arbol_avl.GraficarRecorridoPostOrden();
+    let body = encodeURIComponent(arbol_avl.GraficarRecorridoPostOrden());
     $("#image").attr("src", url + body);
     document.getElementById("carga").value = "";
     console.log(url + body)
@@ -65,7 +65,7 @@ btnpost.addEventListener('click',refrescarArbolPostOrden)
 
 function refrescarArbolInOrden() {
     let url = 'https://quickchart.io/graphviz?graph=';
-    let body = arbol_avl.GraficarRecorridoInOrden();
+    let body = encodeURIComponent(arbol_avl.GraficarRecorridoInOrden());
     $("#image").attr("src", url + body);
     document.getElementById("carga").value = "";
     console.log(url + body)

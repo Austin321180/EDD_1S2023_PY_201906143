@@ -1,3 +1,17 @@
+const inputElement = document.getElementById("inputFile");
+let nombreArchivo = ""
+let base64String = ""
+function onChange(event) {
+    var reader = new FileReader();
+    reader.onload = onReaderLoad;
+    nombreArchivo = event.target.files[0].name
+    reader.readAsDataURL(event.target.files[0]);
+}
+
+function onReaderLoad(event) {
+    base64String = event.target.result
+}
+
 class NodoMatriz {
     constructor(Posx, Posy, nombre) {
         this.siguiente = null;
