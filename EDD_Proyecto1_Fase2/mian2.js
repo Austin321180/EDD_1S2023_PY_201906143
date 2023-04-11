@@ -44,14 +44,6 @@ function refrescarArbolNario() {
 }
 btnarbolnario.addEventListener('click', refrescarArbolNario)
 
-function refrecarArchivos() {
-    let url = 'https://quickchart.io/graphviz?graph=';
-    let body = arbolnario.GraficarArchivos();
-    $("#image1").attr("src", url + body);
-    document.getElementById("carpeta").value = "";
-    console.log(url + body)
-}
-
 function Eliminar() {
     let ruta = document.getElementById("ruta").value
     const fechaYHora = arbol_avl.arbol_nario.obtenerFechaYHora();

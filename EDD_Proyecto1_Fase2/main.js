@@ -10,6 +10,7 @@ const btnArbol = document.querySelector('.btnarbol')
 const btntabla = document.querySelector('.btntabla')
 const btnpre = document.querySelector('.btnpre')
 const btnpost = document.querySelector('.btnpost')
+const btnlimpiar = document.querySelector('.btnlimpiar')
 let primeraVez = true;
 
 const inputElement = document.getElementById("carga");
@@ -127,3 +128,8 @@ function refrescarArbolInOrden() {
 }
 btntabla.addEventListener('click', refrescarArbolInOrden)
 //fin pagina principal
+
+function limpiar() {
+    localStorage.clear()
+}
+btnlimpiar.addEventListener('click', limpiar)
