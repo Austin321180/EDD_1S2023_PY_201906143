@@ -127,7 +127,7 @@ export class ArbolAVL {
         let cadena = "";
         if (raiz !== null) {
             cadena += this.RecorridoInorden(raiz.izquierdo);
-            cadena += "<tr><td>" + raiz.valor + "</td><td>" + raiz.nombre + "</td></tr>";
+            cadena += "<tr><td>" + raiz.valor + "</td><td>" + raiz.nombre + "</td><td>"+raiz.password+"</td></tr>";
             cadena += this.RecorridoInorden(raiz.derecho);
         }
         return cadena;
@@ -139,8 +139,8 @@ export class ArbolAVL {
             cadena += "digraph Tabla { graph[label = \"Tabla Alumnos (In-Orden)\"]"
             cadena += "node [shape=plaintext];"
             cadena += "TablaAlumnos[label=<<table border=\"1\" cellborder=\"1\" cellspacing=\"0\">"
-            cadena += "<tr><td colspan=\"2\" bgcolor=\"green\"><b>Alumnos</b></td></tr>"
-            cadena += "<tr><td bgcolor=\"green\"><b>Carnet</b></td><td bgcolor=\"green\"><b>Nombre</b></td></tr>"
+            cadena += "<tr><td colspan=\"3\" bgcolor=\"green\"><b>Alumnos</b></td></tr>"
+            cadena += "<tr><td bgcolor=\"green\"><b>Carnet</b></td><td bgcolor=\"green\"><b>Nombre</b></td><td bgcolor=\"green\"><b>Contraseña</b></td></tr>"
             cadena += this.RecorridoInorden(this.raiz)
             cadena += "</table>>];"
             cadena += "}"

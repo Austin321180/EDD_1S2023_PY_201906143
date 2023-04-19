@@ -1,4 +1,4 @@
-import { ArbolAVL } from '../EDD_Proyecto1_Fase2/EDD/ArbolAVL.js';
+import { ArbolAVL } from '../EDD_Proyecto1_Fase3/EDD/ArbolAVL.js';
 /*import { ListaCircular } from '../EDD_Proyecto1_Fase2/EDD/ListaCircular.js';
 import { MatrizDispersa } from '../EDD_Proyecto1_Fase2/EDD/Matriz.js';
 import { ArbolNario } from '../EDD_Proyecto1_Fase2/EDD/ArbolMoN.js';*/
