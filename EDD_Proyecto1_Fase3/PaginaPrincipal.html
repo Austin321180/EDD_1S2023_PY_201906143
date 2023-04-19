@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/css/bootstrap.min.css">
+    <title>Pagina Principal</title>
+    <style>
+        .cerrar-container {
+            margin-right: 10px;
+            margin-left: 900px;
+            margin-bottom: 20px;
+        }
+
+        #image-container {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #image {
+            max-width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+
+        #image1 {
+            max-width: 50%;
+            height: auto;
+        }
+
+
+        #image2,
+        #image3,
+        #image4 {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        #image2-container {
+            display: flex;
+            flex-direction: column;
+        }
+
+        body {
+            background-color: #1578f3;
+            /* Cambia el color de fondo de la página */
+        }
+
+        .btnpost,
+        .btnpre,
+        .btnarbol,
+        .btnlimpiar,
+        .btntabla {
+            background-color: #ADD8E6;
+            color: rgb(0, 0, 0);
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+        }
+
+        .btnactive {
+            background-color: #87CEFA;
+        }
+
+        input[type="file"] {
+            appearance: none;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            color: #333;
+            padding: 10px;
+            font-size: 16px;
+            font-family: Arial, sans-serif;
+            border-radius: 5px;
+            box-shadow: none;
+        }
+
+        input[type="file"]:hover,
+        input[type="file"]:focus {
+            outline: none;
+            border-color: #87CEFA;
+        }
+
+        input[type="file"]::-webkit-file-upload-button {
+            background-color: #87CEFA;
+            border: none;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Administrador</h1>
+        <div class="container d-flex flex-column align-items-start cerrar-container">
+            <button onclick="logout()" class="btn btn-primary">Cerrar sesión</button>
+        </div>
+        <br>
+        <div class="input-group mb-3">
+            <!--Post-Orden-->
+            <button class="btnpost" type="button" id="button-addon1">Post-Orden</button>
+            <!--Pre-Orden-->
+            <button class="btnpre" type="button" id="button-addon1">Pre-Orden</button>
+            <button class="btnarbol" type="button" id="button-addon1">Arbol</button>
+            <button type="button" class="btntabla">Tabla</button>
+            <button type="button" class="btnlimpiar">Limpiar</button>
+        </div>
+        <input type="file" id="carga">
+        <div id="image-container">
+            <div>
+                <img id="image">
+                <img id="image1">
+            </div>
+            <div id="image2-container">
+                <img id="image2">
+                <img id="image3">
+                <img id="image4">
+            </div>
+        </div>
+    </div>
+    <script>
+        function logout() {
+            window.location.href = "../index.html";
+        }
+    </script>
+    <script type="module" src="../EDD_Proyecto1_Fase2/main.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

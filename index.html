@@ -76,7 +76,7 @@
       var password = document.getElementById("password").value;
 
       if (username === "admin" && password === "admin") {
-        window.location.href = "EDD_Proyecto1_Fase2/PaginaPrincipal.html";
+        window.location.href = "EDD_Proyecto1_Fase3/PaginaPrincipal.html";
       } else {
         var username = document.getElementById("username").value;
         var password = document.getElementById("password").value;
@@ -84,7 +84,7 @@
 
         if (user && user.password === password) {
           sessionStorage.setItem('username', username);
-          window.location.href = "EDD_Proyecto1_Fase2/Usuarios.html";
+          window.location.href = "EDD_Proyecto1_Fase3/Usuarios.html";
         } else {
           alert('Usuario o contraseña incorrectos');
         }
