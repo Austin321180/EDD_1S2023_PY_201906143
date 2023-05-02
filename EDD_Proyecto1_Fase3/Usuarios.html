@@ -118,6 +118,61 @@
         .btnactive {
             background-color: #87CEFA;
         }
+
+        form {
+            background-color: #F0F8FF;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        input[type="text"],
+        textarea {
+            display: block;
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: none;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        button[type="submit"] {
+            background-color: #0077be;
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #00568c;
+        }
+
+        /* Estilos para el cuadro de chat */
+        #chat {
+            background-color: #F0F8FF;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        #chat div {
+            margin-bottom: 10px;
+        }
+
+        #chat strong {
+            color: #0077be;
+        }
     </style>
 
 
@@ -155,7 +210,7 @@
     <div id="preview"></div>
     <div class="contenedor">
         <button type="button" class="btnarbolnario">Reporte de Carpetas</button>
-        <button type="button" class="btnarchivos">Reporte Archivos</button>
+        <button type="button" class="btnarchivos">Reporte de Mensajes</button>
         <button class="btnbitacora" type="button">Bitacora</button>
     </div>
     <div>
@@ -163,9 +218,76 @@
         <img id="image1" style="border: 1px solid gray;">
         <img id="image2">
     </div>
+    <h1>Sistema de mensajería</h1>
+<!--MENSAJERIA-->
+    <form>
+        <div id="Emisor"></div>
+        <label for="username">Receptor:</label>
+        <input type="text" id="Receptor">
+        <br>
+        <label for="message">Mensaje:</label>
+        <textarea id="message"></textarea>
+        <br>
+        <button type="submit" id="reporte" class="btnreporte">reporte</button>
+        <button type="submit" id="enviar" class="btnenviar">Enviar</button>
+    </form>
+
+    <div id="chat"></div>
+<!--COMPARTIDOS CONMIGO-->
+    <div id="compartidos">
+        <h2>Pestaña de compartidos</h2>
+        <ul>
+            <li>
+                <a href="#" class="archivo" data-tipo="pdf" data-url="url-del-archivo.pdf">Archivo PDF</a>
+            </li>
+            <li>
+                <a href="#" class="archivo" data-tipo="imagen" data-url="url-del-archivo.png">Archivo de imagen</a>
+            </li>
+            <li>
+                <a href="#" class="archivo" data-tipo="texto" data-url="url-del-archivo.txt">Archivo de texto</a>
+            </li>
+        </ul>
+        <div id="archivo-visor"></div>
+    </div>
+    <script>
+        const form = document.querySelector('form');
+        const chat = document.querySelector('#chat');
+
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+            var user = sessionStorage.getItem('username');
+            const username = document.querySelector('#username').value;
+            const message = document.querySelector('#message').value;
+
+            const data = { user, message };
+
+            let messages = JSON.parse(localStorage.getItem('messages')) || [];
+
+            messages.push(data);
+
+            localStorage.setItem('messages', JSON.stringify(messages));
+
+            showMessages(messages);
+
+            document.querySelector('#message').value = '';
+        });
+
+        function showMessages(messages) {
+            chat.innerHTML = '';
+
+            messages.forEach(message => {
+                const div = document.createElement('div');
+                div.innerHTML = `<strong>${message.user}</strong>: ${message.message}`;
+                chat.appendChild(div);
+            });
+        }
+
+        showMessages(JSON.parse(localStorage.getItem('messages')) || []);
+    </script>
     <script>
         var username = sessionStorage.getItem('username');
         document.getElementById("username").innerHTML = "Bienvenido " + username;
+        document.getElementById("Emisor").innerHTML = "Emisor: "+username;
 
         function logout() {
             window.location.href = "../index.html";

@@ -1,5 +1,8 @@
 import { ListaCircular } from './ListaCircular.js';
 import { ArbolNario } from './ArbolMoN.js';
+import { TablaHash } from './TablaHash.js';
+const tablahash = new TablaHash()
+
 class NodoArbolAVL {
     constructor(nombre, valor, password, carpetaRaiz) {
         this.izquierdo = null
@@ -127,7 +130,7 @@ export class ArbolAVL {
         let cadena = "";
         if (raiz !== null) {
             cadena += this.RecorridoInorden(raiz.izquierdo);
-            cadena += "<tr><td>" + raiz.valor + "</td><td>" + raiz.nombre + "</td><td>"+raiz.password+"</td></tr>";
+            cadena += "<tr><td>" + raiz.valor + "</td><td>" + raiz.nombre + "</td><td>" + raiz.password + "</td></tr>";
             cadena += this.RecorridoInorden(raiz.derecho);
         }
         return cadena;

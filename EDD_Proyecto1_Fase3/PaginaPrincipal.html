@@ -88,6 +88,61 @@
             border-radius: 5px;
             cursor: pointer;
         }
+
+        form {
+            background-color: #F0F8FF;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        input[type="text"],
+        textarea {
+            display: block;
+            width: 100%;
+            padding: 5px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: none;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        button[type="submit"] {
+            background-color: #0077be;
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #00568c;
+        }
+
+        /* Estilos para el cuadro de chat */
+        #chat {
+            background-color: #F0F8FF;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        #chat div {
+            margin-bottom: 10px;
+        }
+
+        #chat strong {
+            color: #0077be;
+        }
     </style>
 </head>
 
@@ -100,19 +155,20 @@
         <br>
         <div class="input-group mb-3">
             <!--Post-Orden-->
-            <button class="btnpost" type="button" id="button-addon1">Post-Orden</button>
+            <button class="btnpost" type="button" id="button-addon1">Tabla Hash</button>
             <!--Pre-Orden-->
             <button class="btnpre" type="button" id="button-addon1">Tabla Permisos</button>
             <button class="btnarbol" type="button" id="button-addon1">Arbol</button>
-            <button type="button" class="btntabla">Tabla</button>
-            <button type="button" class="btnlimpiar">Limpiar</button>
+            <button type="button" class="btntabla">Pasar A TablaHash</button>
         </div>
         <input type="file" id="carga">
         <div id="image-container">
+            <br>
             <div>
                 <img id="image">
                 <img id="image1">
             </div>
+            <br>
             <div id="image2-container">
                 <img id="image2">
                 <img id="image3">
@@ -120,6 +176,17 @@
             </div>
         </div>
     </div>
+    <br>
+    <form>
+        <label for="message">Reporte:</label>
+        <textarea id="message"></textarea>
+        <button type="submit">Anterior</button>
+        <button type="submit">Siguiente</button>
+        <br>
+        <label for="bloque">Mensaje Desencriptado:</label>
+        <textarea id="block"></textarea>
+        <br>
+    </form>
     <script>
         function logout() {
             window.location.href = "../index.html";

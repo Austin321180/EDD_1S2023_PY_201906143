@@ -1,8 +1,13 @@
 import { ArbolAVL } from '../EDD_Proyecto1_Fase3/EDD/ArbolAVL.js';
+import { Block } from './EDD/BlockChain.js';
+import { encriptacion, desencriptacion } from './EDD/Encriptacion.js';
+import { TablaHash } from './EDD/TablaHash.js';
 /*import { ListaCircular } from '../EDD_Proyecto1_Fase2/EDD/ListaCircular.js';
 import { MatrizDispersa } from '../EDD_Proyecto1_Fase2/EDD/Matriz.js';
 import { ArbolNario } from '../EDD_Proyecto1_Fase2/EDD/ArbolMoN.js';*/
 const arbol_avl = new ArbolAVL()
+const bloque = new Block()
+const tab = new TablaHash()
 /*const lcirc = new ListaCircular()
 const matriz_d = new MatrizDispersa()
 const arboln_ario = new ArbolNario()*/
@@ -150,3 +155,101 @@ function reporteMatriz() {
     $("#image").attr("src", url + body)
 }
 btnarchivos.addEventListener('click', reporteMatriz)
+
+
+//fase 3
+
+
+
+let bloque_actual
+function fechaActual() {
+    let cadena = ''
+    const fechaActual = new Date();
+    cadena += fechaActual.getDate() < 10 ? ("0" + fechaActual.getDate() + "-") : (fechaActual.getDate() + "-")
+    cadena += fechaActual.getMonth() < 10 ? ("0" + (fechaActual.getMonth() + 1) + "-") : (fechaActual.getMonth() + "-")
+    cadena += fechaActual.getFullYear() + "::"
+    cadena += fechaActual.getHours() < 10 ? ("0" + fechaActual.getHours() + ":") : (fechaActual.getHours() + ":")
+    cadena += fechaActual.getMinutes() < 10 ? ("0" + fechaActual.getMinutes() + ":") : (fechaActual.getMinutes() + ":")
+    cadena += fechaActual.getSeconds() < 10 ? ("0" + fechaActual.getSeconds()) : (fechaActual.getSeconds())
+    return cadena
+}
+const btnEnviar = document.querySelector('.btnenviar')
+btnEnviar.addEventListener("click", enviarMensaje)
+
+function enviarMensaje() {
+    let receptor = document.getElementById("Receptor").value
+    let alumno = JSON.parse(localStorage.getItem("TablaHash" + receptor));
+    //verdificar que existe el carnet del receptor
+    if (alumno) {
+        var username = sessionStorage.getItem('username');
+        let receptor_mensaje = document.getElementById("Receptor").value
+        let mensaje_final = document.getElementById("message").value
+        bloque.insertarBloque(fechaActual(), username, receptor_mensaje, mensaje_final)
+        console.log("Mensaje Enviado")
+    }else{
+        alert("El carnet no existe")
+    }
+}
+const bntreporte = document.getElementById("reporte")
+bntreporte.addEventListener("click", reporte)
+function reporte() {
+    bloque_actual = bloque.inicio
+    if (bloque_actual != null) {
+        let cadena = "Index: " + bloque_actual.valor['index']
+        cadena += "\nTimeStamp: " + bloque_actual.valor['timestamp']
+        cadena += "\nEmisor: " + bloque_actual.valor['transmitter']
+        cadena += "\nReceptor: " + bloque_actual.valor['receiver']
+        cadena += "\nMensaje: " + bloque_actual.valor['message']
+        cadena += "\nPreviousHash: " + bloque_actual.valor['previoushash']
+        cadena += "\nHash: " + bloque_actual.valor['hash']
+        //document.getElementById("reporte-bloques").value = cadena
+        console.log(cadena);
+        mostrar_Mensaje_descriptado()
+    }
+}
+
+//const btnReporte1 = document.getElementById("siguiente-bloque")
+//btnReporte1.addEventListener("click", reporte_siguente)
+
+function reporte_siguente() {
+    if (bloque_actual.siguiente != null) {
+        bloque_actual = bloque_actual.siguiente
+        let cadena = "Index: " + bloque_actual.valor['index']
+        cadena += "\nTimeStamp: " + bloque_actual.valor['timestamp']
+        cadena += "\nEmisor: " + bloque_actual.valor['transmitter']
+        cadena += "\nReceptor: " + bloque_actual.valor['receiver']
+        cadena += "\nMensaje: " + bloque_actual.valor['message']
+        cadena += "\nPreviousHash: " + bloque_actual.valor['previoushash']
+        cadena += "\nHash: " + bloque_actual.valor['hash']
+        document.getElementById("reporte-bloques").value = cadena
+        mostrar_Mensaje_descriptado()
+    }
+}
+
+//const btnReporte2 = document.getElementById("anterior-bloque")
+//btnReporte2.addEventListener("click", reporte_anterior)
+
+function reporte_anterior() {
+    if (bloque_actual.anterior != null) {
+        bloque_actual = bloque_actual.anterior
+        let cadena = "Index: " + bloque_actual.valor['index']
+        cadena += "\nTimeStamp: " + bloque_actual.valor['timestamp']
+        cadena += "\nEmisor: " + bloque_actual.valor['transmitter']
+        cadena += "\nReceptor: " + bloque_actual.valor['receiver']
+        cadena += "\nMensaje: " + bloque_actual.valor['message']
+        cadena += "\nPreviousHash: " + bloque_actual.valor['previoushash']
+        cadena += "\nHash: " + bloque_actual.valor['hash']
+        document.getElementById("reporte-bloques").value = cadena
+        mostrar_Mensaje_descriptado()
+    }
+}
+
+async function mostrar_Mensaje_descriptado() {
+    /** if carnet ==  bloque_actual.valor['receiver'] y  bloque_actual.valor['trasmitter'] == emisor
+     * mostrar mensaje
+     * bloque_actual = abloque_actual.siguiente
+     */
+    let cadena = await desencriptacion(bloque_actual.valor['message'])
+    //document.getElementById("reporte-mensajes").value = cadena
+    console.log(cadena);
+}

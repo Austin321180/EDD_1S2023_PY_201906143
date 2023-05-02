@@ -1,8 +1,10 @@
 import { ArbolAVL } from '../EDD_Proyecto1_Fase3/EDD/ArbolAVL.js';
+import { TablaHash } from './EDD/TablaHash.js';
 /*import { ListaCircular } from '../EDD_Proyecto1_Fase2/EDD/ListaCircular.js';
 import { MatrizDispersa } from '../EDD_Proyecto1_Fase2/EDD/Matriz.js';
 import { ArbolNario } from '../EDD_Proyecto1_Fase2/EDD/ArbolMoN.js';*/
 const arbol_avl = new ArbolAVL()
+const tab = new TablaHash()
 /*const lcirc = new ListaCircular()
 const matriz_d = new MatrizDispersa()
 const arboln_ario = new ArbolNario()*/
@@ -26,6 +28,7 @@ function onReaderLoad(event) {
     localStorage.clear();
     var obj = JSON.parse(event.target.result);
     for (var i = 0; i < obj.alumnos.length; i++) {
+        //tab.insertar(obj.alumnos[i].carnet,obj.alumnos[i].nombre,obj.alumnos[i].password);
         arbol_avl.InsertarDatos(obj.alumnos[i].nombre, obj.alumnos[i].carnet, obj.alumnos[i].password, obj.alumnos[i].Carpeta_Raiz)
         localStorage.setItem(obj.alumnos[i].carnet, JSON.stringify({
             nombre: obj.alumnos[i].nombre,
@@ -93,43 +96,28 @@ btnpost.addEventListener('click', refrescarArbolPostOrden)
 
 
 function refrescarArbolInOrden() {
-    let url = 'https://quickchart.io/graphviz?graph=';
-    let body;
-    if (!primeraVez) {
-        body = encodeURIComponent(arbol_avl.GraficarRecorridoInOrden());
-        $("#image").attr("src", url + body);
-    } else {
-        let estudiantes = [];
-        for (let i = 0; i < localStorage.length; i++) {
-            let key = localStorage.key(i);
-            let value = localStorage.getItem(key);
-            try {
-                let parsed = JSON.parse(value);
-                if (parsed.tipo === 'estudiante') {
-                    estudiantes.push({
-                        nombre: parsed.nombre,
-                        carnet: key,
-                        password: parsed.password,
-                        Carpeta_Raiz: parsed.Carpeta_Raiz
-                    });
-                }
-            } catch (error) {
-                console.log(error);
+    for (let i = 0; i < localStorage.length; i++) {
+        let key = localStorage.key(i);
+        let value = localStorage.getItem(key);
+        try {
+            let parsed = JSON.parse(value);
+            if (parsed.tipo === 'estudiante') {
+                tab.insertar(key, parsed.nombre, parsed.password);
             }
+        } catch (error) {
+            console.log(error);
         }
-        estudiantes.forEach(estudiante => {
-            arbol_avl.InsertarDatos(estudiante.nombre, estudiante.carnet, estudiante.password, estudiante.Carpeta_Raiz);
-        });
-        let body = encodeURIComponent(arbol_avl.GraficarRecorridoInOrden());
-        $("#image").attr("src", url + body);
     }
-    document.getElementById("carga").value = "";
-    console.log(url + body);
 }
 btntabla.addEventListener('click', refrescarArbolInOrden)
 //fin pagina principal
 
-function limpiar() {
-    localStorage.clear()
+function refrescarTablaHash() {
+    let url = 'https://quickchart.io/graphviz?graph=';
+    let body = encodeURIComponent(tab.graficaraTablaHash());
+    //console.log(tab.graficaraTablaHash())
+    $("#image").attr("src", url + body);
+    document.getElementById("carga").value = "";
+    //console.log(url + body)
 }
-btnlimpiar.addEventListener('click', limpiar)
+btnpost.addEventListener('click', refrescarTablaHash)
