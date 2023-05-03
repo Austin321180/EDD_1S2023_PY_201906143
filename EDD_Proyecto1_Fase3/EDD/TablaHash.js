@@ -24,7 +24,7 @@ class TablaHash {
         if (indice < this.capacidad) {
             try {
                 if (this.tabla[indice] == null) {
-                    console.log("Añadio " + carnet+" "+usuario+" "+contraseña)
+                    console.log("Añadio " + carnet+" "+usuario)
                     this.tabla[indice] = nuevoNodo
                     this.utilizacion++
                     this.capacidad_tabla()

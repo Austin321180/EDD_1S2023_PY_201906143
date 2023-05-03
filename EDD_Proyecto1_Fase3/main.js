@@ -74,7 +74,6 @@ function refrescarTabla() {
     document.getElementById("carga").value = "";
     console.log(url + body)
 }
-btnpre.addEventListener('click', refrescarTabla)
 
 
 function refrescarArbol() {
@@ -121,3 +120,42 @@ function refrescarTablaHash() {
     //console.log(url + body)
 }
 btnpost.addEventListener('click', refrescarTablaHash)
+
+function graficatablapermisos() {
+    let cadena = "";
+    cadena += "digraph G { graph[label = \"Tabla Permisos\"]";
+    cadena += "node [shape=plaintext];";
+    cadena += "TablaHash[label=<<table border=\"1\" cellborder=\"1\" cellspacing=\"0\">";
+    cadena += "<tr><td colspan=\"5\" bgcolor=\"green\"><b>Permisos</b></td></tr>";
+    cadena += "<tr><td bgcolor=\"green\"><b>Propietario</b></td><td bgcolor=\"green\"><b>Destino</b></td><td bgcolor=\"green\"><b>Ubicacion</b></td><td bgcolor=\"green\"><b>Archivo</b></td><td bgcolor=\"green\"><b>Permiso</b></td></tr>";
+    for (let i = 0; i < localStorage.length; i++) {
+        let key = localStorage.key(i);
+        let value = localStorage.getItem("Permisos_" + key);
+        try {
+            let parsed = JSON.parse(value);
+            if (parsed.tipo === 'Matriz') {
+                cadena += "<tr><td>"
+                cadena += parsed.Propietario
+                cadena += "</td><td>";
+                cadena += parsed.Destino
+                cadena += "</td><td>";
+                cadena += parsed.Ubicacion
+                cadena += "</td><td>";
+                cadena += parsed.Archivo
+                cadena += "</td><td>";
+                cadena += parsed.Permiso
+                cadena += "</td>";
+                cadena += "</tr>";
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    cadena += "</table>>];"
+    cadena += "}"
+    let url = 'https://quickchart.io/graphviz?graph=';
+    let body = encodeURIComponent(cadena);
+    //console.log(cadena)
+    $("#image1").attr("src", url + body);
+}
+btnpre.addEventListener('click', graficatablapermisos)

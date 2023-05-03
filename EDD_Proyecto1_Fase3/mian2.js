@@ -125,12 +125,25 @@ function cargarArchivo(nombreArchivo, base64String) {
 
 function AsignarPermisos() {
     let cadena = document.getElementById("permiso").value
+    let ruta = "";
+    var username = sessionStorage.getItem('username');
     let arreglo = cadena.split('-')
     let alumno = JSON.parse(localStorage.getItem(arreglo[1]));
-    //console.log(alumno.nombre);
-    //console.log(alumno.password);
-    //console.log(alumno.Carpeta_Raiz);
     if (alumno) {
+        ruta = arbol_avl.arbol_nario.mostrarRuta(arreglo[0]);
+        console.log(arreglo[0])
+        console.log(ruta);
+        //guardar datos localstorage permisos
+        localStorage.setItem("Permisos_" + arreglo[1], JSON.stringify({
+            Propietario: username,
+            Destino: arreglo[1],
+            Ubicacion: ruta,
+            Archivo: arreglo[0],
+            Permiso: arreglo[2],
+            tipo: "Matriz"
+        }));
+
+
         arbol_avl.arbol_nario.mD.Permisos(arreglo[0], arreglo[1], arreglo[2])
         console.log(`El alumno ${alumno.nombre} existe`);
         const fechaYHora = arbol_avl.arbol_nario.obtenerFechaYHora();
@@ -186,7 +199,7 @@ function enviarMensaje() {
         let mensaje_final = document.getElementById("message").value
         bloque.insertarBloque(fechaActual(), username, receptor_mensaje, mensaje_final)
         console.log("Mensaje Enviado")
-    }else{
+    } else {
         alert("El carnet no existe")
     }
 }

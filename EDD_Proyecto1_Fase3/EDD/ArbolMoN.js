@@ -337,6 +337,29 @@ export class ArbolNario {
         return cadena
     }
 
+    mostrarRuta(carpeta) {
+        let traer = this.buscarRuta(thi.raiz, carpeta);
+        if (traer === null) {
+            console.log("no existe el archivo");
+            return;
+        }
+    }
+
+    buscarRuta(actual, archivo) {
+        if (actual.id === archivo) {
+            return actual.valor;
+        } else if (actual.primero !== null) {
+            let resultado = this.buscarRuta(actual.primero, archivo);
+            if (resultado !== null) {
+                return resultado
+            }
+        }
+        if(actual.siguiente!==null){
+            return this.buscarRuta(actual.siguiente,archivo);
+        }
+        return null;
+    }
+
     eliminarCarpetaRecursiva(actual, nombreCarpetaAEliminar) {
         if (actual.primero) {
             this.eliminarCarpetaRecursiva(actual.primero, nombreCarpetaAEliminar);
