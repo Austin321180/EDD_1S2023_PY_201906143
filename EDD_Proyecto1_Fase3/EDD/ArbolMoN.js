@@ -1,4 +1,6 @@
 import { MatrizDispersa } from './Matriz.js';
+import { GrafoDirigido } from './GrafoDirigido.js';
+const grafod = new GrafoDirigido()
 class NodoArbolNario {
     constructor(valor, id) {
         this.siguiente = null;
@@ -354,8 +356,8 @@ export class ArbolNario {
                 return resultado
             }
         }
-        if(actual.siguiente!==null){
-            return this.buscarRuta(actual.siguiente,archivo);
+        if (actual.siguiente !== null) {
+            return this.buscarRuta(actual.siguiente, archivo);
         }
         return null;
     }
@@ -388,4 +390,37 @@ export class ArbolNario {
         carpeta = null;
     }
 
+    grafo() {
+        this.siguientesvalores(this.raiz.valor, this.raiz.primero)
+    }
+
+    siguientesvalores(padre, raiz) {
+        let hijos = ''
+        let carpeta_padre = padre
+        let aux = raiz
+        while (aux) {
+            hijos += aux.valor + ','
+            aux = aux.siguiente
+        }
+        hijos = hijos.substr(0, hijos.length - 1)
+        if (hijos !== '') {
+            //console.log("padre: " + padre + "| hijos: " + hijos)
+            var username = sessionStorage.getItem('username');
+            let compartir = JSON.parse(localStorage.getItem("grafo")) || []
+            compartir.push({
+                usuario: username,
+                padre: padre,
+                hijos: hijos
+            })
+            localStorage.setItem("grafo", JSON.stringify(compartir))
+            //grafod.insertarValores(padre, hijos)
+        }
+        aux = raiz
+        while (aux) {
+            carpeta_padre = padre + aux.valor + "/"
+            //carpeta_padre = carpeta_padre.substr(0, carpeta_padre.length - 1)
+            this.siguientesvalores(carpeta_padre, aux.primero)
+            aux = aux.siguiente
+        }
+    }
 }

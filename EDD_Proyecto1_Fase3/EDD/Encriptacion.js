@@ -7,6 +7,11 @@ for (let i = 0; i < clave.length; i++) {
 
 const iv = crypto.getRandomValues(new Uint8Array(16))
 const algoritmo = { name: 'AES-GCM', iv: iv }
+localStorage.setItem("iv", JSON.stringify({
+    iv: iv,
+    algoritmo: algoritmo,
+    view: view
+}))
 
 async function encriptacion(mensaje) {
     const enconder = new TextEncoder()

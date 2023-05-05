@@ -2,11 +2,13 @@ import { ArbolAVL } from '../EDD_Proyecto1_Fase3/EDD/ArbolAVL.js';
 import { Block } from './EDD/BlockChain.js';
 import { encriptacion, desencriptacion } from './EDD/Encriptacion.js';
 import { TablaHash } from './EDD/TablaHash.js';
+import { GrafoDirigido } from './EDD/GrafoDirigido.js';
 /*import { ListaCircular } from '../EDD_Proyecto1_Fase2/EDD/ListaCircular.js';
 import { MatrizDispersa } from '../EDD_Proyecto1_Fase2/EDD/Matriz.js';
 import { ArbolNario } from '../EDD_Proyecto1_Fase2/EDD/ArbolMoN.js';*/
 const arbol_avl = new ArbolAVL()
 const bloque = new Block()
+const grafD = new GrafoDirigido()
 const tab = new TablaHash()
 /*const lcirc = new ListaCircular()
 const matriz_d = new MatrizDispersa()
@@ -44,10 +46,31 @@ function refrescarArbolNario() {
     let url = 'https://quickchart.io/graphviz?graph=';
     let body = encodeURIComponent(arbol_avl.arbol_nario.grafica_arbol());
     //arbol_avl.raiz.grafica_arbol();
+    refrecargrafodirigido()
     $("#image1").attr("src", url + body);
     document.getElementById("carpeta").value = "";
 }
-btnarbolnario.addEventListener('click', refrescarArbolNario)
+btnarbolnario.addEventListener('click', refrecargrafodirigido)
+
+//grafo del grafo_dirigido
+function refrecargrafodirigido() {
+    //insertar valores en el grafo
+    arbol_avl.arbol_nario.grafo()
+    let compartir = JSON.parse(localStorage.getItem("grafo")) || []
+    compartir.forEach(gra => {
+        var username = sessionStorage.getItem('username');
+        if (gra.usuario == username) {
+            grafD.insertarValores(gra.padre, gra.hijos)
+        }else{
+            console.log("no tiene carpetas creadas")
+        }
+    })
+    let url = 'https://quickchart.io/graphviz?graph=';
+    let body = encodeURIComponent(grafD.grafica());
+    $("#image1").attr("src", url + body);
+    document.getElementById("carpeta").value = "";
+    //console.log(grafD.grafica())
+}
 
 function Eliminar() {
     let ruta = document.getElementById("ruta").value
@@ -128,24 +151,39 @@ function AsignarPermisos() {
     let ruta = "";
     var username = sessionStorage.getItem('username');
     let arreglo = cadena.split('-')
-    let alumno = JSON.parse(localStorage.getItem(arreglo[1]));
-    if (alumno) {
-        ruta = arbol_avl.arbol_nario.mostrarRuta(arreglo[0]);
-        console.log(arreglo[0])
-        console.log(ruta);
+    let tablahas = JSON.parse(localStorage.getItem("TablaHash")) || [];
+    let existe = false;
+    for (let i = 0; i < tablahas.length; i++) {
+        console.log(tablahas[i].carnet + " = " + arreglo[1])
+        if (tablahas[i].carnet == arreglo[1]) {
+            existe = true;
+            break;
+        }
+    }
+    if (existe) {
+        console.log(arreglo[0] + " compartido con " + arreglo[1])
         //guardar datos localstorage permisos
-        localStorage.setItem("Permisos_" + arreglo[1], JSON.stringify({
+        let codigoBase64 = localStorage.getItem(arreglo[0]);
+        let compartir = JSON.parse(localStorage.getItem("Compartidos")) || []
+        let tipoArchivo;
+        if (arreglo[0].endsWith(".pdf")) {
+            tipoArchivo = "pdf";
+        } else if (arreglo[0].endsWith(".png") || arreglo[0].endsWith(".jpg") || arreglo[0].endsWith(".jpeg") || arreglo[0].endsWith(".gif")) {
+            tipoArchivo = "imagen";
+        } else if (arreglo[0].endsWith(".txt")) {
+            tipoArchivo = "texto";
+        }
+        compartir.push({
             Propietario: username,
-            Destino: arreglo[1],
-            Ubicacion: ruta,
-            Archivo: arreglo[0],
-            Permiso: arreglo[2],
-            tipo: "Matriz"
-        }));
-
-
+            Compartido: arreglo[1],
+            NombreArchivo: arreglo[0],
+            bas64: codigoBase64,
+            Permisos: arreglo[2],
+            TipoArchivo: tipoArchivo,
+            tipo: "Compartidos"
+        });
+        localStorage.setItem("Compartidos", JSON.stringify(compartir));
         arbol_avl.arbol_nario.mD.Permisos(arreglo[0], arreglo[1], arreglo[2])
-        console.log(`El alumno ${alumno.nombre} existe`);
         const fechaYHora = arbol_avl.arbol_nario.obtenerFechaYHora();
         try {
             console.log(fechaYHora.fecha, fechaYHora.hora, " Se creo la carpeta: " + arreglo[0])
@@ -174,7 +212,6 @@ btnarchivos.addEventListener('click', reporteMatriz)
 
 
 
-let bloque_actual
 function fechaActual() {
     let cadena = ''
     const fechaActual = new Date();
@@ -191,78 +228,77 @@ btnEnviar.addEventListener("click", enviarMensaje)
 
 function enviarMensaje() {
     let receptor = document.getElementById("Receptor").value
-    let alumno = JSON.parse(localStorage.getItem("TablaHash" + receptor));
-    //verdificar que existe el carnet del receptor
-    if (alumno) {
+    let tablahas = JSON.parse(localStorage.getItem("TablaHash")) || [];
+    let existe = false;
+    for (let i = 0; i < tablahas.length; i++) {
+        if (tablahas[i].carnet == receptor) {
+            existe = true;
+            break;
+        }
+    }
+    if (existe) {
         var username = sessionStorage.getItem('username');
         let receptor_mensaje = document.getElementById("Receptor").value
         let mensaje_final = document.getElementById("message").value
         bloque.insertarBloque(fechaActual(), username, receptor_mensaje, mensaje_final)
-        console.log("Mensaje Enviado")
+        console.log("Mensaje Enviado a " + receptor)
     } else {
         alert("El carnet no existe")
     }
 }
-const bntreporte = document.getElementById("reporte")
-bntreporte.addEventListener("click", reporte)
-function reporte() {
-    bloque_actual = bloque.inicio
-    if (bloque_actual != null) {
-        let cadena = "Index: " + bloque_actual.valor['index']
-        cadena += "\nTimeStamp: " + bloque_actual.valor['timestamp']
-        cadena += "\nEmisor: " + bloque_actual.valor['transmitter']
-        cadena += "\nReceptor: " + bloque_actual.valor['receiver']
-        cadena += "\nMensaje: " + bloque_actual.valor['message']
-        cadena += "\nPreviousHash: " + bloque_actual.valor['previoushash']
-        cadena += "\nHash: " + bloque_actual.valor['hash']
-        //document.getElementById("reporte-bloques").value = cadena
-        console.log(cadena);
-        mostrar_Mensaje_descriptado()
+
+//mensajes
+const form = document.querySelector('form');
+const chat = document.querySelector('#chat');
+
+form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    var user = sessionStorage.getItem('username');
+    let receptor = document.getElementById("Receptor").value
+    const username = document.querySelector('#username').value;
+    const message = document.querySelector('#message').value;
+    const data = { user, message, receptor };
+    let messages = JSON.parse(localStorage.getItem('messages')) || [];
+    messages.push(data);
+    localStorage.setItem('messages', JSON.stringify(messages));
+    showMessages(messages);
+});
+
+function showMessages(messages) {
+    chat.innerHTML = '';
+    var user = sessionStorage.getItem('username');
+    messages.forEach(message => {
+        const div = document.createElement('div');
+        if (message.user === user) {
+            div.innerHTML = `<strong>Tú: ${message.user}</strong>: ${message.message}`;
+        } else if (message.receptor === user) {
+            div.innerHTML = `<strong>Receptor: ${message.user}</strong>: ${message.message}`;
+        }
+        chat.appendChild(div);
+    });
+}
+
+showMessages(JSON.parse(localStorage.getItem('messages')) || []);
+
+let compartir = JSON.parse(localStorage.getItem("Compartidos")) || [];
+const archivoVisor = document.querySelector('#archivo-visor');
+compartir.forEach(Compartido => {
+    var user = sessionStorage.getItem('username');
+    if (Compartido.Compartido === user) {
+        switch (Compartido.TipoArchivo) {
+            case 'pdf':
+                archivoVisor.innerHTML += `<iframe src="${Compartido.bas64}" width="100%" height="500px"></iframe>`;
+                break;
+            case 'imagen':
+                archivoVisor.innerHTML += `<img src="${Compartido.bas64}" alt="Imagen"/>`;
+                break;
+            case 'texto':
+                let codigo = btoa(Compartido.bas64)
+                console.log("texto " + codigo)
+                archivoVisor.innerHTML += `<textarea cols="80" rows="20">${codigo}</textarea>`;
+                break;
+        }
+    } else {
+        console.log("no hay compartidos")
     }
-}
-
-//const btnReporte1 = document.getElementById("siguiente-bloque")
-//btnReporte1.addEventListener("click", reporte_siguente)
-
-function reporte_siguente() {
-    if (bloque_actual.siguiente != null) {
-        bloque_actual = bloque_actual.siguiente
-        let cadena = "Index: " + bloque_actual.valor['index']
-        cadena += "\nTimeStamp: " + bloque_actual.valor['timestamp']
-        cadena += "\nEmisor: " + bloque_actual.valor['transmitter']
-        cadena += "\nReceptor: " + bloque_actual.valor['receiver']
-        cadena += "\nMensaje: " + bloque_actual.valor['message']
-        cadena += "\nPreviousHash: " + bloque_actual.valor['previoushash']
-        cadena += "\nHash: " + bloque_actual.valor['hash']
-        document.getElementById("reporte-bloques").value = cadena
-        mostrar_Mensaje_descriptado()
-    }
-}
-
-//const btnReporte2 = document.getElementById("anterior-bloque")
-//btnReporte2.addEventListener("click", reporte_anterior)
-
-function reporte_anterior() {
-    if (bloque_actual.anterior != null) {
-        bloque_actual = bloque_actual.anterior
-        let cadena = "Index: " + bloque_actual.valor['index']
-        cadena += "\nTimeStamp: " + bloque_actual.valor['timestamp']
-        cadena += "\nEmisor: " + bloque_actual.valor['transmitter']
-        cadena += "\nReceptor: " + bloque_actual.valor['receiver']
-        cadena += "\nMensaje: " + bloque_actual.valor['message']
-        cadena += "\nPreviousHash: " + bloque_actual.valor['previoushash']
-        cadena += "\nHash: " + bloque_actual.valor['hash']
-        document.getElementById("reporte-bloques").value = cadena
-        mostrar_Mensaje_descriptado()
-    }
-}
-
-async function mostrar_Mensaje_descriptado() {
-    /** if carnet ==  bloque_actual.valor['receiver'] y  bloque_actual.valor['trasmitter'] == emisor
-     * mostrar mensaje
-     * bloque_actual = abloque_actual.siguiente
-     */
-    let cadena = await desencriptacion(bloque_actual.valor['message'])
-    //document.getElementById("reporte-mensajes").value = cadena
-    console.log(cadena);
-}
+});

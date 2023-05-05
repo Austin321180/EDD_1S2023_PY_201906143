@@ -211,7 +211,7 @@
     <div class="contenedor">
         <button type="button" class="btnarbolnario">Reporte de Carpetas</button>
         <button type="button" class="btnarchivos">Reporte de Mensajes</button>
-        <button class="btnbitacora" type="button">Bitacora</button>
+        <button class="btnbitacora" type="button">Grafo</button>
     </div>
     <div>
         <img id="image" style="position: relative; bottom: -50px; display: block; margin: 0 auto;">
@@ -236,54 +236,8 @@
 <!--COMPARTIDOS CONMIGO-->
     <div id="compartidos">
         <h2>Pestaña de compartidos</h2>
-        <ul>
-            <li>
-                <a href="#" class="archivo" data-tipo="pdf" data-url="url-del-archivo.pdf">Archivo PDF</a>
-            </li>
-            <li>
-                <a href="#" class="archivo" data-tipo="imagen" data-url="url-del-archivo.png">Archivo de imagen</a>
-            </li>
-            <li>
-                <a href="#" class="archivo" data-tipo="texto" data-url="url-del-archivo.txt">Archivo de texto</a>
-            </li>
-        </ul>
         <div id="archivo-visor"></div>
     </div>
-    <script>
-        const form = document.querySelector('form');
-        const chat = document.querySelector('#chat');
-
-        form.addEventListener('submit', (event) => {
-            event.preventDefault();
-            var user = sessionStorage.getItem('username');
-            const username = document.querySelector('#username').value;
-            const message = document.querySelector('#message').value;
-
-            const data = { user, message };
-
-            let messages = JSON.parse(localStorage.getItem('messages')) || [];
-
-            messages.push(data);
-
-            localStorage.setItem('messages', JSON.stringify(messages));
-
-            showMessages(messages);
-
-            document.querySelector('#message').value = '';
-        });
-
-        function showMessages(messages) {
-            chat.innerHTML = '';
-
-            messages.forEach(message => {
-                const div = document.createElement('div');
-                div.innerHTML = `<strong>${message.user}</strong>: ${message.message}`;
-                chat.appendChild(div);
-            });
-        }
-
-        showMessages(JSON.parse(localStorage.getItem('messages')) || []);
-    </script>
     <script>
         var username = sessionStorage.getItem('username');
         document.getElementById("username").innerHTML = "Bienvenido " + username;

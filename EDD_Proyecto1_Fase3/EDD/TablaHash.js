@@ -1,5 +1,6 @@
 import { Block } from "./BlockChain.js"
 import { desencriptacion, encriptacion } from './Encriptacion.js'
+import { GrafoDirigido } from "./GrafoDirigido.js"
 const bloque = new Block()
 
 class nodoHash {
@@ -7,6 +8,7 @@ class nodoHash {
         this.carnet = carnet
         this.usuario = usuario
         this.password = password
+        this.grafod = new GrafoDirigido()
     }
 }
 
@@ -15,16 +17,15 @@ class TablaHash {
         this.tabla = new Array(7)
         this.capacidad = 7
         this.utilizacion = 0
+        this.grafod=null
     }
 
     async insertar(carnet, usuario, password) {
         let indice = this.calculoIndice(carnet)
-        let contraseña = await encriptacion(password)
-        const nuevoNodo = new nodoHash(carnet, usuario, contraseña)
+        const nuevoNodo = new nodoHash(carnet, usuario, password)
         if (indice < this.capacidad) {
             try {
                 if (this.tabla[indice] == null) {
-                    console.log("Añadio " + carnet+" "+usuario)
                     this.tabla[indice] = nuevoNodo
                     this.utilizacion++
                     this.capacidad_tabla()
@@ -64,7 +65,7 @@ class TablaHash {
         }
     }
 
-    nueva_capacidad() { //Sustituir por un algoritmo del siguiente numero primo
+    nueva_capacidad() {
         let numero = this.capacidad + 1;
         while (!this.isPrime(numero)) {
             numero++;
@@ -97,24 +98,32 @@ class TablaHash {
         return nueva_posicion
     }
 
-    busquedaUsuario(carnet) {
+    busquedaUsuario(carnet, encriptado) {
         let indice = this.calculoIndice(carnet)
         if (indice < this.capacidad) {
             try {
                 if (this.tabla[indice] == null) {
-                    alert("Bienvenido " + this.tabla[indice].usuario)
+                    alert("No hay alumnos")
                 } else if (this.tabla[indice] != null && this.tabla[indice].carnet == carnet) {
-                    alert("Bienvenido " + this.tabla[indice].usuario)
+                    if (this.tabla[indice].password == encriptado) {
+                        window.location.href = "EDD_Proyecto1_Fase3/Usuarios.html";
+                    } else {
+                        alert("Datos incorrectos")
+                    }
                 } else {
                     let contador = 1
                     indice = this.RecalculoIndice(carnet, contador)
                     while (this.tabla[indice] != null) {
-                        contador++
-                        indice = this.RecalculoIndice(carnet, contador)
                         if (this.tabla[indice].carnet == carnet) {
-                            alert("Bienvenido " + this.tabla[indice].usuario)
+                            if (this.tabla[indice].password == encriptado) {
+                                window.location.href = "EDD_Proyecto1_Fase3/Usuarios.html";
+                            } else {
+                                alert("Datos incorrectos")
+                            }
                             return
                         }
+                        contador++
+                        indice = this.RecalculoIndice(carnet, contador)
                     }
                 }
             } catch (err) {
@@ -136,30 +145,26 @@ class TablaHash {
 
     graficaraTablaHash() {
         let cadena = ""
-        if (this.tabla != null) {
-            cadena += "digraph G { graph[label = \"Tabla Hash\"]";
-            cadena += "node [shape=plaintext];";
-            cadena += "TablaHash[label=<<table border=\"1\" cellborder=\"1\" cellspacing=\"0\">";
-            cadena += "<tr><td colspan=\"3\" bgcolor=\"green\"><b>Alumnos</b></td></tr>";
-            cadena += "<tr><td bgcolor=\"green\"><b>Carnet</b></td><td bgcolor=\"green\"><b>Nombre</b></td><td bgcolor=\"green\"><b>Constraseña</b></td></tr>";
-            for (var i = 0; i < this.capacidad; i++) {
-                if (this.tabla[i] != null) {
-                    cadena += "<tr>"
-                    cadena += "<td>";
-                    cadena += this.tabla[i].carnet;
-                    cadena += "</td><td>";
-                    cadena += this.tabla[i].usuario;
-                    cadena += "</td><td>";
-                    cadena += this.tabla[i].password;
-                    cadena += "</td>";
-                    cadena += "</tr>";
-                } else {
-                    console.log("vacio")
-                }
-            }
-            cadena += "</table>>];"
-            cadena += "}"
-        }
+        cadena += "digraph G { graph[label = \"Tabla Hash\"]";
+        cadena += "node [shape=plaintext];";
+        cadena += "TablaHash[label=<<table border=\"1\" cellborder=\"1\" cellspacing=\"0\">";
+        cadena += "<tr><td colspan=\"3\" bgcolor=\"green\"><b>Alumnos</b></td></tr>";
+        cadena += "<tr><td bgcolor=\"green\"><b>Carnet</b></td><td bgcolor=\"green\"><b>Nombre</b></td><td bgcolor=\"green\"><b>Constraseña</b></td></tr>";
+        let tablahas = JSON.parse(localStorage.getItem("TablaHash")) || []
+        tablahas.forEach(tabla => {
+            cadena += "<tr>"
+            cadena += "<td>";
+            cadena += tabla.carnet;
+            cadena += "</td><td>";
+            cadena += tabla.usuario;
+            cadena += "</td><td>";
+            cadena += tabla.contraseña;
+            cadena += "</td>";
+            cadena += "</tr>";
+        });
+        cadena += "</table>>];"
+        cadena += "}"
+
         return cadena
     }
 
