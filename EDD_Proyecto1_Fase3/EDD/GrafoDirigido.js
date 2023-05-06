@@ -62,7 +62,6 @@ class GrafoDirigido {
         }
     }
 
-    //Reporte modificado para trabajar con carpetas
     grafica() {
         let cadena = "graph grafoDirigido{ rankdir=LR; node [shape=box]; \"/\"; node [shape = ellipse] ; layout=neato; "
         let auxPadre = this.principal

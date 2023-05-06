@@ -156,7 +156,6 @@ function cargarArchivo(nombreArchivo, base64String) {
     try {
         console.log(fechaYHora.fecha, fechaYHora.hora, " Se creo el archivo: " + nombreArchivo)
         arbol_avl.lcirc.AgregarValor(fechaYHora.fecha, fechaYHora.hora, " Se agrego el archivo: " + nombreArchivo)
-        reporteMatriz();
     } catch (error) {
         alert("Hubo un error ")
     }
