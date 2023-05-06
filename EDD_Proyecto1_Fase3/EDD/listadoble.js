@@ -36,7 +36,22 @@ class ListaEnlazada {
     }
 
     graficar() {
-        let cadena = ''
+        let cadena = 'digraph G{'
+        cadena += 'rankdir=TB;'
+        cadena += "node [shape=box, style=filled, fillcolor=palegreen];"
+        let aux = this.inicio
+        let contador = 0
+        while (aux !== null) {
+            cadena += "nodo" + contador + "["
+            cadena += `label=\"TimeStamp: ${aux.valor['timestamp']}\\nEmisor: ${aux.valor['transmitter']}\\nReceptor: ${aux.valor['receiver']}\\nPreviushash: ${aux.valor['previoushash']}\"`
+            cadena += "];"
+            if (aux.siguiente !== null) {
+                cadena += "nodo" + contador + " -> " + "nodo" + (contador + 1) + ";"
+            }
+            contador++;
+            aux = aux.siguiente
+        }
+        cadena += '}'
         return cadena
     }
 }

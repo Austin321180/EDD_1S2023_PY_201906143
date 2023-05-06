@@ -16,6 +16,7 @@ const btnArbol = document.querySelector('.btnarbol')
 const btntabla = document.querySelector('.btntabla')
 const btnpre = document.querySelector('.btnpre')
 const btnpost = document.querySelector('.btnpost')
+const btnreporte_block = document.getElementById("reporte_block")
 let primeraVez = true;
 
 const inputElement = document.getElementById("carga");
@@ -213,8 +214,15 @@ function reporte_anterior() {
     }
 }
 
-async function mostrar_Mensaje_descriptado() {
+function mostrar_Mensaje_descriptado() {
     //let cadena = await desencriptacion(bloque_actual.valor['message'])
     document.getElementById("mensaje_desencriptado").value = bloque_actual.valor['desencriptado']
     //console.log(cadena);
+}
+
+btnreporte_block.addEventListener('click',refrescarreporteblock)
+function refrescarreporteblock(){
+    let url = 'https://quickchart.io/graphviz?graph=';
+    let body = encodeURIComponent(list.graficar());
+    $("#image5").attr("src", url + body);
 }

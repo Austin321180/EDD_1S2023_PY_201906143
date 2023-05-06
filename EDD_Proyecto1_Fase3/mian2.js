@@ -1,6 +1,5 @@
 import { ArbolAVL } from '../EDD_Proyecto1_Fase3/EDD/ArbolAVL.js';
 import { Block } from './EDD/BlockChain.js';
-import { encriptacion, desencriptacion } from './EDD/Encriptacion.js';
 import { TablaHash } from './EDD/TablaHash.js';
 import { GrafoDirigido } from './EDD/GrafoDirigido.js';
 /*import { ListaCircular } from '../EDD_Proyecto1_Fase2/EDD/ListaCircular.js';
@@ -31,6 +30,14 @@ function agregarVarios() {
         return
     }
     try {
+        var username = sessionStorage.getItem('username');
+        let busc = JSON.parse(localStorage.getItem("buscar")) || []
+        busc.push({
+            user: username,
+            ruta: ruta,
+            carpeta: carpeta
+        })
+        localStorage.setItem("buscar", JSON.stringify(busc))
         arbol_avl.arbol_nario.insertarValor(ruta, carpeta)
         //arbol_avl.arbol_nario.insertarValor(ruta, carpeta)
         //arbolnario.insertarValor(ruta, carpeta)
@@ -61,7 +68,7 @@ function refrecargrafodirigido() {
         var username = sessionStorage.getItem('username');
         if (gra.usuario == username) {
             grafD.insertarValores(gra.padre, gra.hijos)
-        }else{
+        } else {
             console.log("no tiene carpetas creadas")
         }
     })
@@ -107,6 +114,15 @@ function refrescarlistacircular() {
 btnbitacora.addEventListener('click', refrescarlistacircular)
 
 function mostrarcarpetas() {
+    let busc = JSON.parse(localStorage.getItem("buscar")) || []
+    busc.forEach(buscar => {
+        var username = sessionStorage.getItem('username');
+        if (username == buscar.user) {
+            arbol_avl.arbol_nario.insertarValor(buscar.ruta, buscar.carpeta)
+        } else {
+            console.log("no hay carpetas para buscar")
+        }
+    })
     let ruta = document.getElementById("ruta").value
     //arbol_avl.arbol_nario.mostrarCarpeta(ruta)
     let url = 'https://quickchart.io/graphviz?graph=';
@@ -259,27 +275,29 @@ form.addEventListener('submit', (event) => {
     const message = document.querySelector('#message').value;
     const data = { user, message, receptor };
     let messages = JSON.parse(localStorage.getItem('messages')) || [];
+    let mensajes = JSON.parse(localStorage.getItem("Mensajes")) || [];
     messages.push(data);
     localStorage.setItem('messages', JSON.stringify(messages));
-    showMessages(messages);
+    MostrarMensaje(mensajes);
 });
 
-function showMessages(messages) {
+function MostrarMensaje(messages) {
     chat.innerHTML = '';
     var user = sessionStorage.getItem('username');
     messages.forEach(message => {
         const div = document.createElement('div');
-        if (message.user === user) {
-            div.innerHTML = `<strong>Tú: ${message.user}</strong>: ${message.message}`;
-        } else if (message.receptor === user) {
-            div.innerHTML = `<strong>Receptor: ${message.user}</strong>: ${message.message}`;
+        if (message.Emisor === user) {
+            div.innerHTML = `<strong>Tú: ${message.Emisor}</strong>: ${message.Desencriptado}`;
+        } else if (message.Recpetor === user) {
+            div.innerHTML = `<strong>Receptor: ${message.Emisor}</strong>: ${message.Desencriptado}`;
         }
         chat.appendChild(div);
     });
 }
 
-showMessages(JSON.parse(localStorage.getItem('messages')) || []);
+MostrarMensaje(JSON.parse(localStorage.getItem("Mensajes")) || []);
 
+//compartidos
 let compartir = JSON.parse(localStorage.getItem("Compartidos")) || [];
 const archivoVisor = document.querySelector('#archivo-visor');
 compartir.forEach(Compartido => {
@@ -293,9 +311,9 @@ compartir.forEach(Compartido => {
                 archivoVisor.innerHTML += `<img src="${Compartido.bas64}" alt="Imagen"/>`;
                 break;
             case 'texto':
-                let codigo = btoa(Compartido.bas64)
-                console.log("texto " + codigo)
-                archivoVisor.innerHTML += `<textarea cols="80" rows="20">${codigo}</textarea>`;
+                console.log(Compartido.bas64)
+                let textoDecodificado = atob(Compartido.bas64.split(',')[1]);
+                archivoVisor.innerHTML += `<textarea cols="80" rows="20">${textoDecodificado}</textarea>`;
                 break;
         }
     } else {

@@ -52,6 +52,10 @@
         .btnpre,
         .btnarbol,
         .btnlimpiar,
+        .reportemensajes,
+        .anterior,
+        .siguiente,
+        .btnreporteblock,
         .btntabla {
             background-color: #ADD8E6;
             color: rgb(0, 0, 0);
@@ -183,14 +187,16 @@
     <form>
         <label for="message">Reporte:</label>
         <textarea id="reporte" rows="10"></textarea>
-        <button type="button" id="hacer_reporte">Reporte</button>
+        <button type="button" id="hacer_reporte" class="reportemensajes">Reporte</button>
         <br>
         <label for="bloque">Mensaje Desencriptado:</label>
         <textarea id="mensaje_desencriptado"></textarea>
-        <button type="button" id="reporte_anterior">Anterior</button>
-        <button type="button" id="reporte_siguiente">Siguiente</button>
+        <button type="button" id="reporte_anterior" class="anterior">Anterior</button>
+        <button type="button" id="reporte_siguiente" class="siguiente">Siguiente</button>
         <br>
     </form>
+    <button type="button" id="reporte_block" class="btnreporteblock">Reporte BlockChain</button>
+    <img id="image5">
     <script>
         function logout() {
             window.location.href = "../index.html";
