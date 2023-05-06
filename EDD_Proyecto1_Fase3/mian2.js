@@ -203,7 +203,6 @@ function AsignarPermisos() {
         try {
             console.log(fechaYHora.fecha, fechaYHora.hora, " Se creo la carpeta: " + arreglo[0])
             arbol_avl.lcirc.AgregarValor(fechaYHora.fecha, fechaYHora.hora, " Se Otorgo perismos de: " + arreglo[2] + "\\n para: " + arreglo[0] + "\\n al carnet: " + arreglo[1])
-            reporteMatriz();
         } catch (error) {
             alert("Hubo un error ")
         }

@@ -8,11 +8,13 @@ Al momento de entrar a nuestro link de github-pages, aparecera un login:
 y luego entraremos con el usuario "admin" y contraseña "admin" y nos mandara a la pagina principal del administrador:
 ![inicio administrador](https://github.com/Austin321180/EDD_1S2023_PY_201906143/blob/gh-pages/EDD_Proyecto1_Fase2/Imagenes/Captura%20de%20pantalla%202023-04-10%20152302.png)
 
-Aqui podremos subir el archivo json de los alumnos aceptados en la fase 1:
+Se cuenta con un apartado para poder ver el reporte de los mensajes enviados:
 ![subir archivos](https://github.com/Austin321180/EDD_1S2023_PY_201906143/blob/gh-pages/EDD_Proyecto1_Fase2/Imagenes/Captura%20de%20pantalla%202023-04-10%20152334.png)
 
-Una vez subido el json podremos graficar con ayuda de graphviz, el arbol avl y la tabla:
+Tambien cuenta con un boton para generar una grafica de los reportes de mensajes:
 ![tabla arbol](https://github.com/Austin321180/EDD_1S2023_PY_201906143/blob/gh-pages/EDD_Proyecto1_Fase2/Imagenes/Captura%20de%20pantalla%202023-04-10%20152520.png)
+
+Se podra visualizar 2 tablas, una es la tabla hash que contiene los alumnos y las contraseñas encriptadas para usarse más adelante, de igual forma una tabla general para poder ver que usuario compartio sus archivos cargados con quien:![grafos_compartidos]()
 
 ## Usuario
 
@@ -22,16 +24,16 @@ Cuando se inicie sesion con los alumnos aparecer la nueva interfaz exclusiva de 
 Aqui podran crear carpetas y se podran visualizar con la ayuda de graphviz:
 ![inicio](https://github.com/Austin321180/EDD_1S2023_PY_201906143/blob/gh-pages/EDD_Proyecto1_Fase2/Imagenes/Captura%20de%20pantalla%202023-04-10%20153611.png)
 
-luego podremos subir archivos a la ruta que se especifica y podremos ver como se grafica, aunque es una matriz dispersa, inicialmente sera como una lista doblemente enlazada:
+Ahora una vez los usuarios suban sus archivos podran generar un grafo dirigido de las carpetas y de sus archivos en ellas:
 ![inicio](https://github.com/Austin321180/EDD_1S2023_PY_201906143/blob/gh-pages/EDD_Proyecto1_Fase2/Imagenes/Captura%20de%20pantalla%202023-04-10%20154151.png)
 
-podremos dar permisos a los archivos que subimos pero solo a carnets que existen y ahora si se vera como una matriz dispersa:
+Tambien pueden buscar sus carpetas, colocando la ruta en la parte superior y presionar el boton buscar y devolvera las carpetas en esa ruta:
 ![inicio](https://github.com/Austin321180/EDD_1S2023_PY_201906143/blob/gh-pages/EDD_Proyecto1_Fase2/Imagenes/Captura%20de%20pantalla%202023-04-10%20154553.png)
 
 Tambien podremos buscar una ruta y ver si existe, y si tiene achivos, los muestra:
 ![inicio](https://github.com/Austin321180/EDD_1S2023_PY_201906143/blob/gh-pages/EDD_Proyecto1_Fase2/Imagenes/Captura%20de%20pantalla%202023-04-10%20154731.png)
 
-Tambien podremos borrar alguna carpeta que querramos, solo con poner la ruta y presionar el boton borrar
-
-podremos ver una bitacora de todo lo que hemos hecho para llevar un registro y esto sera una lista cirucular: 
+Ahora se cuenta con un apartado para poder enviar mensajes a otros usuarios y de igual forma se puede recibir mensajes: 
 ![inicio](https://github.com/Austin321180/EDD_1S2023_PY_201906143/blob/gh-pages/EDD_Proyecto1_Fase2/Imagenes/Captura%20de%20pantalla%202023-04-10%20154748.png)
+
+Si alguien nos compartio un archivo, habra un apartado para poder ver los archivos que se nos compartieron: ![archivos_compartidos]()
